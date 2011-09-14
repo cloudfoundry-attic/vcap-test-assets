@@ -1,0 +1,7 @@
+desc "Build the application war"
+task :build do
+  $build_exit_code = nil
+  maven_cmd = "mvn -e -ff clean package"
+  `#{maven_cmd}`
+  $build_exit_code = $?.dup
+end

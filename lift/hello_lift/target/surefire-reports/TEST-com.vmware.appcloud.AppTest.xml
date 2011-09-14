@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite failures="0" time="0.779" errors="0" skipped="0" tests="2" name="com.vmware.appcloud.AppTest">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64"/>
+    <property name="java.vm.version" value="19.1-b02"/>
+    <property name="java.vm.vendor" value="Sun Microsystems Inc."/>
+    <property name="java.vendor.url" value="http://java.sun.com/"/>
+    <property name="path.separator" value=":"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="/home/abyss/dev/appcloud/gerrit/vcap-test-assets/scala_lift"/>
+    <property name="java.runtime.version" value="1.6.0_24-b07"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="basedir" value="/home/abyss/dev/appcloud/gerrit/vcap-test-assets/scala_lift"/>
+    <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="surefire.real.class.path" value="/tmp/surefirebooter1441128038086690124.jar"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="os.name" value="Linux"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64/server:/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/amd64:/usr/lib/jvm/java-6-sun-1.6.0.24/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="surefire.test.class.path" value="/home/abyss/dev/appcloud/gerrit/vcap-test-assets/scala_lift/target/test-classes:/home/abyss/dev/appcloud/gerrit/vcap-test-assets/scala_lift/target/classes:/home/abyss/.m2/repository/org/scala-lang/scala-library/2.7.3/scala-library-2.7.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-core/1.0.3/lift-core-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-util/1.0.3/lift-util-1.0.3.jar:/home/abyss/.m2/repository/log4j/log4j/1.2.14/log4j-1.2.14.jar:/home/abyss/.m2/repository/javax/mail/mail/1.4/mail-1.4.jar:/home/abyss/.m2/repository/javax/activation/activation/1.1/activation-1.1.jar:/home/abyss/.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar:/home/abyss/.m2/repository/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar:/home/abyss/.m2/repository/commons-codec/commons-codec/1.3/commons-codec-1.3.jar:/home/abyss/.m2/repository/commons-fileupload/commons-fileupload/1.2.1/commons-fileupload-1.2.1.jar:/home/abyss/.m2/repository/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar:/home/abyss/.m2/repository/net/liftweb/lift-webkit/1.0.3/lift-webkit-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-mapper/1.0.3/lift-mapper-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-machine/1.0.3/lift-machine-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-record/1.0.3/lift-record-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-textile/1.0.3/lift-textile-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-facebook/1.0.3/lift-facebook-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-amqp/1.0.3/lift-amqp-1.0.3.jar:/home/abyss/.m2/repository/com/rabbitmq/rabbitmq-client/1.3.0/rabbitmq-client-1.3.0.jar:/home/abyss/.m2/repository/commons-cli/commons-cli/1.1/commons-cli-1.1.jar:/home/abyss/.m2/repository/commons-io/commons-io/1.2/commons-io-1.2.jar:/home/abyss/.m2/repository/junit/junit/4.5/junit-4.5.jar:/home/abyss/.m2/repository/net/liftweb/lift-xmpp/1.0.3/lift-xmpp-1.0.3.jar:/home/abyss/.m2/repository/org/igniterealtime/smack/smack/3.1.0/smack-3.1.0.jar:/home/abyss/.m2/repository/org/igniterealtime/smack/smackx/3.1.0/smackx-3.1.0.jar:/home/abyss/.m2/repository/net/liftweb/lift-widgets/1.0.3/lift-widgets-1.0.3.jar:/home/abyss/.m2/repository/org/apache/derby/derby/10.4.2.0/derby-10.4.2.0.jar:/home/abyss/.m2/repository/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar:/home/abyss/.m2/repository/org/mortbay/jetty/jetty/6.1.26/jetty-6.1.26.jar:/home/abyss/.m2/repository/org/mortbay/jetty/jetty-util/6.1.26/jetty-util-6.1.26.jar:/home/abyss/.m2/repository/org/mortbay/jetty/servlet-api/2.5-20081211/servlet-api-2.5-20081211.jar:/home/abyss/.m2/repository/org/scala-lang/scala-compiler/2.7.3/scala-compiler-2.7.3.jar:"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="50.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Server Compiler"/>
+    <property name="os.version" value="2.6.38-11-generic"/>
+    <property name="user.home" value="/home/abyss"/>
+    <property name="user.timezone" value=""/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.specification.version" value="1.6"/>
+    <property name="user.name" value="abyss"/>
+    <property name="java.class.path" value="/home/abyss/dev/appcloud/gerrit/vcap-test-assets/scala_lift/target/test-classes:/home/abyss/dev/appcloud/gerrit/vcap-test-assets/scala_lift/target/classes:/home/abyss/.m2/repository/org/scala-lang/scala-library/2.7.3/scala-library-2.7.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-core/1.0.3/lift-core-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-util/1.0.3/lift-util-1.0.3.jar:/home/abyss/.m2/repository/log4j/log4j/1.2.14/log4j-1.2.14.jar:/home/abyss/.m2/repository/javax/mail/mail/1.4/mail-1.4.jar:/home/abyss/.m2/repository/javax/activation/activation/1.1/activation-1.1.jar:/home/abyss/.m2/repository/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar:/home/abyss/.m2/repository/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar:/home/abyss/.m2/repository/commons-codec/commons-codec/1.3/commons-codec-1.3.jar:/home/abyss/.m2/repository/commons-fileupload/commons-fileupload/1.2.1/commons-fileupload-1.2.1.jar:/home/abyss/.m2/repository/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar:/home/abyss/.m2/repository/net/liftweb/lift-webkit/1.0.3/lift-webkit-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-mapper/1.0.3/lift-mapper-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-machine/1.0.3/lift-machine-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-record/1.0.3/lift-record-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-textile/1.0.3/lift-textile-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-facebook/1.0.3/lift-facebook-1.0.3.jar:/home/abyss/.m2/repository/net/liftweb/lift-amqp/1.0.3/lift-amqp-1.0.3.jar:/home/abyss/.m2/repository/com/rabbitmq/rabbitmq-client/1.3.0/rabbitmq-client-1.3.0.jar:/home/abyss/.m2/repository/commons-cli/commons-cli/1.1/commons-cli-1.1.jar:/home/abyss/.m2/repository/commons-io/commons-io/1.2/commons-io-1.2.jar:/home/abyss/.m2/repository/junit/junit/4.5/junit-4.5.jar:/home/abyss/.m2/repository/net/liftweb/lift-xmpp/1.0.3/lift-xmpp-1.0.3.jar:/home/abyss/.m2/repository/org/igniterealtime/smack/smack/3.1.0/smack-3.1.0.jar:/home/abyss/.m2/repository/org/igniterealtime/smack/smackx/3.1.0/smackx-3.1.0.jar:/home/abyss/.m2/repository/net/liftweb/lift-widgets/1.0.3/lift-widgets-1.0.3.jar:/home/abyss/.m2/repository/org/apache/derby/derby/10.4.2.0/derby-10.4.2.0.jar:/home/abyss/.m2/repository/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar:/home/abyss/.m2/repository/org/mortbay/jetty/jetty/6.1.26/jetty-6.1.26.jar:/home/abyss/.m2/repository/org/mortbay/jetty/jetty-util/6.1.26/jetty-util-6.1.26.jar:/home/abyss/.m2/repository/org/mortbay/jetty/servlet-api/2.5-20081211/servlet-api-2.5-20081211.jar:/home/abyss/.m2/repository/org/scala-lang/scala-compiler/2.7.3/scala-compiler-2.7.3.jar:"/>
+    <property name="java.vm.specification.version" value="1.0"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="/usr/lib/jvm/java-6-sun-1.6.0.24/jre"/>
+    <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="user.language" value="en"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.6.0_24"/>
+    <property name="java.ext.dirs" value="/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/ext:/usr/java/packages/lib/ext"/>
+    <property name="sun.boot.class.path" value="/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/resources.jar:/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/rt.jar:/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/jsse.jar:/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/jce.jar:/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/charsets.jar:/usr/lib/jvm/java-6-sun-1.6.0.24/jre/lib/modules/jdk.boot.jar:/usr/lib/jvm/java-6-sun-1.6.0.24/jre/classes"/>
+    <property name="java.vendor" value="Sun Microsystems Inc."/>
+    <property name="localRepository" value="/home/abyss/.m2/repository"/>
+    <property name="file.separator" value="/"/>
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="gnome"/>
+    <property name="sun.cpu.isalist" value=""/>
+  </properties>
+  <testcase time="0.707" classname="com.vmware.appcloud.AppTest" name="testXml"/>
+  <testcase time="0.001" classname="com.vmware.appcloud.AppTest" name="testOK"/>
+</testsuite>

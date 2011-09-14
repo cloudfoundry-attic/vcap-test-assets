@@ -1,0 +1,15 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.vmware.appcloud.testapps</groupId>
+    <artifactId>JavaTinyApp</artifactId>
+    <version>1.0</version>
+    <packaging>war</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

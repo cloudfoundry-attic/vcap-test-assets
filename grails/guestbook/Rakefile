@@ -1,0 +1,28 @@
+desc "Build the application war"
+task :build => [:clean] do
+  puts "Building '#{File.basename(Dir.pwd)}'"
+  exit_code = nil
+  build_cmd = "grails war"
+  `#{build_cmd}`
+  exit_code = $?.dup
+  if exit_code == 0
+     puts "Successfully built '#{File.basename(Dir.pwd)}'"
+  else
+     puts "Failed to build '#{File.basename(Dir.pwd)}'"
+  end
+end
+
+desc "Clean out build artifacts"
+task :clean do
+  puts "Cleaning '#{File.basename(Dir.pwd)}'"
+  exit_code = nil
+  clean_cmd = "grails clean"
+  `#{clean_cmd}`
+  exit_code = $?.exitstatus
+  if exit_code == 0
+     puts "Successfully cleaned '#{File.basename(Dir.pwd)}'"
+  else
+     puts "Failed to clean '#{File.basename(Dir.pwd)}'"
+  end
+end
+

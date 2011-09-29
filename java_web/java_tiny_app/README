@@ -1,0 +1,9 @@
+Simple Java Web App that echoes some AppCloud environment variables.
+
+It also lets you test the HealthManager by sending a "http://host/?shutdown=true" request.
+
+To build, please use Maven..
+
+    mvn package
+
+which should generate a WAR file in the "target" directory.

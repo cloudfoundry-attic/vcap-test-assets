@@ -1,7 +1,9 @@
-package com.vmware.appcloud.model
+package com.vmware.appcloud {
+package model {
 
 import _root_.net.liftweb.mapper._
 import _root_.net.liftweb.util._
+import _root_.net.liftweb.common._
 
 /**
  * The singleton that has methods for accessing the database
@@ -30,4 +32,7 @@ class User extends MegaProtoUser[User] {
     override def textareaCols = 50
     override def displayName = "Personal Essay"
   }
+}
+
+}
 }

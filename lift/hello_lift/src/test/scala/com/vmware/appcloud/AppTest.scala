@@ -5,6 +5,7 @@ import _root_.junit.framework._
 import Assert._
 import _root_.scala.xml.XML
 import _root_.net.liftweb.util._
+import _root_.net.liftweb.common._
 
 object AppTest {
   def suite: Test = {
@@ -47,15 +48,24 @@ class AppTest extends TestCase("app") {
       if (file.isDirectory)
         for (f <- file.listFiles) wellFormed(f)
 
-      if (file.isFile && handledXml(file.getName)) {
+      /*
+      if (file.isFile && file.exists && handledXml(file.getName)) {
         try {
-          XML.loadFile(file)
+          import java.io.FileInputStream
+          val fis = new FileInputStream(file)
+          try {
+            XML.load(fis)
+          } finally {
+            fis.close()
+          }
         } catch {
           case e: _root_.org.xml.sax.SAXParseException => failed = file :: failed
         }
       }
-      if (file.isFile && handledXHtml(file.getName)) {
-        PCDataXmlParser(new java.io.FileInputStream(file.getAbsolutePath)) match {
+      */
+
+      if (file.isFile && file.exists && handledXHtml(file.getName)) {
+        PCDataXmlParser(new _root_.java.io.FileInputStream(file.getAbsolutePath)) match {
           case Full(_) => // file is ok
           case _ => failed = file :: failed
         }

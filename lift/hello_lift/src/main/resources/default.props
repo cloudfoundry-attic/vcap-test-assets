@@ -1,4 +1,0 @@
-db.driver=org.apache.derby.jdbc.EmbeddedDriver
-db.url=jdbc:derby:lift_example;create=true
-db.user=
-db.password=

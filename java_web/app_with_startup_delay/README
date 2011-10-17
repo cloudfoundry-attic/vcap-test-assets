@@ -1,0 +1,21 @@
+This application is used to verify that the URLs it exposes are available
+immediately for user traffic after the app has been started as per the
+expectation of Cloud Foundry applications.
+
+This aspect of application startup is an issue because Tomcat exposes
+lifecycle hooks and configuration options that allow one to tap into
+more fine grained states of applications startup that leaves us open to
+the possibility of declaring that an app is available for user traffic
+too soon. This app helps verify that an app is truly available for user
+traffic (i.e it indirectly verifies that the Tomcat configuration / lifecyle
+registration & response are correct) when Cloud Foundry declares that is.
+
+Some additional details:
+a. With Tomcat 6, Cloud Foundry was relying on registering for and receipt of the
+"j2ee.state.running" Lifecycle event [see lifecycle events published by Tomcat
+in "org.apache.catalina.Lifecycle"] to declare that an application was
+available or that its state is "RUNNING" as reported by Cloud Foundry API.
+b. With Tomcat 7, we rely on setting the "bindOnInit" configuration to "false"
+and having Tomcat bind the HTTP connector to the socket after it (and indirectly
+the web deployed in the Tomcat container) has started. See
+http://tomcat.apache.org/tomcat-7.0-doc/config/http.html

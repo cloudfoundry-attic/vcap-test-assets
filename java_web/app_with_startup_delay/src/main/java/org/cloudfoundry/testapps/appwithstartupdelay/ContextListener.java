@@ -11,7 +11,7 @@ public class ContextListener implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent arg0) {
         try {
-            Thread.sleep(45 * 1000);
+            Thread.sleep(30 * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

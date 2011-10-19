@@ -1,5 +1,6 @@
 package org.cloudfoundry.canonical.apps;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -31,10 +32,13 @@ public class ServiceController {
     }
 
     @RequestMapping(value = "/crash", method = RequestMethod.GET)
-    public void crash(HttpServletResponse response) throws IOException {
-        PrintWriter out = response.getWriter();
-        System.exit(0);
-        out.println("it should not get here");
+    public void crash(HttpServletResponse response) throws IOException, InterruptedException {
+        int pid = Integer.parseInt(
+            (new File("/proc/self")).getCanonicalFile().getName());
+        String killCmd = "kill -9 " + pid;
+        ProcessBuilder pb = new ProcessBuilder("bash", "-c", killCmd);
+        Process shell = pb.start();
+        shell.waitFor();
     }
 
     @RequestMapping(value = "/service/mongo/{key}", method = RequestMethod.POST)

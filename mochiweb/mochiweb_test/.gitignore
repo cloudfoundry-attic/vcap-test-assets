@@ -1,0 +1,9 @@
+/ebin
+/doc
+/_test
+/.eunit
+/docs
+.DS_Store
+/TEST-*.xml
+/rel/mochiweb_test
+/deps/mochiweb

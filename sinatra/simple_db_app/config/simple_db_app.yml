@@ -1,0 +1,5 @@
+---
+#database_uri: sqlite3:simple_db_app.db
+database_uri: mysql://root:root@localhost/simple
+log_level: DEBUG
+log_file: /tmp/simple_db_app.log

@@ -118,12 +118,25 @@ var app = [
     });
   }],
   [get(/^\/service\/rabbitmq\/(\w+)$/), function(req, res, key) {
-    res.end(msg_value);
+    rabbitmq_services(function(conn, queue) {
+      queue.subscribe({ack: true}, function (msg) {
+        conn.end();
+        res.end(msg.data_value);
+      });
+    });
   }],
   [post(/^\/service\/rabbitmq\/(\w+)$/), function(req, res, key) {
-    getBody(req, function(body){
-      rabbitsrs(key,body);
-      res.end();
+    getBody(req, function(body) {
+      rabbitmq_services(function(conn, queue) {
+        queue.bind("#");
+        queue.on('queueBindOk', function() {
+          conn.publish(key, {'data_value' : body});
+          setTimeout(function () {
+            conn.end();
+          }, 1000);
+          res.end();
+        });
+      });
     });
   }],
 ];
@@ -173,7 +186,7 @@ function load_service(service_name){
   return service;
 }
 
-function rabbitsrs(key, value, res){
+function rabbitmq_services(callback) {
   var service = load_service('rabbitmq');
   var amqp = require('./lib/node-amqp');
   url = require('url').parse(service['url']);
@@ -181,25 +194,14 @@ function rabbitsrs(key, value, res){
   var auth = url['auth'].split(':');
   var user = auth[0];
   var pass = auth[1];
-  var connection = amqp.createConnection({ host: url['hostname'],  port: url['port'], login: user, password: pass, vhost:  url.pathname.substr(1) });
-  connection.on('ready', function () {
-    var q = connection.queue('node-default-exchange', function() {
-      q.bind("#");
-      q.on('queueBindOk', function() { // wait until queue is bound
-        q.on('basicConsumeOk', function () { // wait until consumer is registered
-          connection.publish(key, {'data_value' : value});
-          setTimeout(function () {
-            connection.end();
-          }, 1000);
-        });
-        q.subscribe({ routingKeyInPayload: true }, function (msg) { // register consumer
-          msg_value = msg.data_value;
-          console.log(msg.data_value);
-        });
-      });
+  conn = amqp.createConnection({ host: url['hostname'],  port: url['port'], login: user, password: pass, vhost:  url.pathname.substr(1) });
+  conn.on('ready', function () {
+    var queue = conn.queue('node-default-exchange', function() {
+      callback(conn, queue);
     });
   });
 }
+
 function rabbit(key, value, res){
   var service = load_service('rabbitmq');
   var amqp = require('./lib/node-amqp');

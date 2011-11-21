@@ -109,21 +109,43 @@ var app = [
     });
   }],
   [get(/^\/service\/rabbit\/(\w+)$/), function(req, res, key) {
+    console.log("GET /service/rabbit");
     res.end(msg_value);
   }],
   [post(/^\/service\/rabbit\/(\w+)$/), function(req, res, key) {
+    console.log("POST /service/rabbit");
     getBody(req, function(body){
       rabbit(key,body);
       res.end();
     });
   }],
   [get(/^\/service\/rabbitmq\/(\w+)$/), function(req, res, key) {
-    res.end(msg_value);
+    console.log("GET /service/rabbitmq");
+    rabbitmq_services(function(conn, queue) {
+      queue.subscribe({ack: true}, function (msg) {
+        console.log("rabbitmq queue message received: " + msg.data_value);
+        conn.end();
+        console.log("rabbitmq client closed");
+        res.end(msg.data_value);
+      });
+    });
   }],
   [post(/^\/service\/rabbitmq\/(\w+)$/), function(req, res, key) {
-    getBody(req, function(body){
-      rabbitsrs(key,body);
-      res.end();
+    console.log("POST /service/rabbitmq");
+    getBody(req, function(body) {
+      rabbitmq_services(function(conn, queue) {
+        queue.bind("#");
+        queue.on('queueBindOk', function() {
+          console.log("rabbitmq queue bound");
+          conn.publish(key, {'data_value' : body});
+          console.log("rabbitmq message published: " + body);
+          setTimeout(function () {
+            conn.end();
+            console.log("rabbitmq client closed");
+          }, 1000);
+          res.end();
+        });
+      });
     });
   }],
 ];
@@ -173,7 +195,7 @@ function load_service(service_name){
   return service;
 }
 
-function rabbitsrs(key, value, res){
+function rabbitmq_services(callback) {
   var service = load_service('rabbitmq');
   var amqp = require('./lib/node-amqp');
   url = require('url').parse(service['url']);
@@ -181,25 +203,22 @@ function rabbitsrs(key, value, res){
   var auth = url['auth'].split(':');
   var user = auth[0];
   var pass = auth[1];
-  var connection = amqp.createConnection({ host: url['hostname'],  port: url['port'], login: user, password: pass, vhost:  url.pathname.substr(1) });
-  connection.on('ready', function () {
-    var q = connection.queue('node-default-exchange', function() {
-      q.bind("#");
-      q.on('queueBindOk', function() { // wait until queue is bound
-        q.on('basicConsumeOk', function () { // wait until consumer is registered
-          connection.publish(key, {'data_value' : value});
-          setTimeout(function () {
-            connection.end();
-          }, 1000);
-        });
-        q.subscribe({ routingKeyInPayload: true }, function (msg) { // register consumer
-          msg_value = msg.data_value;
-          console.log(msg.data_value);
-        });
-      });
+  console.log("host: " + hostname);
+  console.log("user: " + user);
+  console.log("pass: " + pass);
+  console.log("port: " + url['port']);
+  console.log("path: " + url.pathname.substr(1));
+  console.log("url: " + service['url']);
+  conn = amqp.createConnection({ host: url['hostname'],  port: url['port'], login: user, password: pass, vhost:  url.pathname.substr(1) });
+  conn.on('ready', function () {
+    console.log("rabbitmq client ready");
+    var queue = conn.queue('node-default-exchange', function() {
+      console.log("rabbitmq queue ready");
+      callback(conn, queue);
     });
   });
 }
+
 function rabbit(key, value, res){
   var service = load_service('rabbitmq');
   var amqp = require('./lib/node-amqp');

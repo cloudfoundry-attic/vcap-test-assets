@@ -1,0 +1,6 @@
+source "http://rubygems.org"
+# Without any bound services, app runs on sqlite3
+#.. but may also be staged with mysql
+gem 'sinatra'
+gem 'json_pure'
+gem 'carrot'

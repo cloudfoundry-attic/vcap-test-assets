@@ -8,7 +8,7 @@ services = JSON.parse(ENV['VCAP_SERVICES'])
 blob_gw = nil
 services.each do |k,v|
   puts "#{k}"
-  if k.match(/^blob-/)
+  if k.match(/^vblob-/)
     blob_gw = v
   end
 end

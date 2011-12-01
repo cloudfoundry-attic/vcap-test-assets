@@ -5,25 +5,36 @@
     <title>Database tables may have been Modified!</title>
 </head>
 <body>
-    <h1>Database tables may have been Modified!!</h1>
+   <h1>Database tables may have been Modified!!</h1>
 
-    <h4>Database Info:</h4>
-    DataSource: <c:out value="${dbInfo}"/></br>
+   <h4>Database Info:</h4>
+       DataSource: <c:out value="${dbInfo}"/></br>
 
-    <h4>Could we modify db tables?</h4>
-        <p>
-                <c:out value="${itemExists}"/></br>
-        </p>
+   <h4>Could we modify db tables?</h4>
+       <p>
+           <c:out value="${itemExists}"/></br>
+       </p>
 
-    <c:if test="${not empty allTables}">
-        <p>
-            <c:forEach var="table" items="${allTables}">
-                <c:out value="${table}"/></br>
-            </c:forEach>
-        </p>
-    </c:if>
-    <c:if test="${empty allTables}">
-        <p>No Tables found</p>
-    </c:if>
+       <c:if test="${not empty allTables}">
+           <p>
+           <c:forEach var="table" items="${allTables}">
+               <c:out value="${table}"/></br>
+           </c:forEach>
+           </p>
+       </c:if>
+       <c:if test="${empty allTables}">
+           <p>No Tables found</p>
+       </c:if>
+       <c:if test="${updatedItemCount <= previousItemCount}">
+           <p>FAIL: Expected new current_items count to be greater than previous current_items count</p>
+           <c:out value="${updatedItemCount}"/></br>
+       </c:if>
+       <c:if test="${empty updatedItemCount}">
+           <p>FAIL: No Current Items found</p>
+       </c:if>
+       <c:if test="${updatedItemCount >= previousItemCount}">
+           <p>PASS: found new entries in current_items table</p>
+           <c:out value="${updatedItemCount}"/></br>
+       </c:if>
 </body>
 </html>

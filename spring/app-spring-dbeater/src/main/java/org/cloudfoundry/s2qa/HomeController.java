@@ -37,7 +37,9 @@ public class HomeController {
   public String setuptest(Model model) {
       logger.info("Create initial db table: current_items");
       model.addAttribute("dbInfo", referenceRepository.getDbInfo());
+      model.addAttribute("previousItemCount", 0);
       model.addAttribute("itemExists", referenceRepository.setupInitTestDBTable());
+      model.addAttribute("updatedItemCount", referenceRepository.countItems());
       model.addAttribute("allTables", referenceRepository.findAllTables());
       return "dbtablelist";
    }
@@ -47,7 +49,7 @@ public class HomeController {
        logger.info("Getting Full!");
        model.addAttribute("dbInfo", referenceRepository.getDbInfo());
        model.addAttribute("previousItemCount", referenceRepository.countItems());
-       model.addAttribute("fatterItemCount", referenceRepository.addMoreItems());
+       model.addAttribute("updatedItemCount", referenceRepository.addMoreItems());
        return "dbeater";
    }
 
@@ -56,7 +58,7 @@ public class HomeController {
       logger.info("Getting Slimmer!");
       model.addAttribute("dbInfo", referenceRepository.getDbInfo());
       model.addAttribute("previousItemCount", referenceRepository.countItems());
-      model.addAttribute("slimmerItemCount", referenceRepository.removeItems());
+      model.addAttribute("updatedItemCount", referenceRepository.removeItems());
       return "dbslimmer";
    }
 

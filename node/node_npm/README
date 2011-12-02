@@ -1,0 +1,7 @@
+This is a sample app that shows how to deploy a node app using npm dependencies to vcloudlabs.
+
+1. Add package_info.json (include dependency)
+2. npm bundle (creates node_modules directory)
+3. vmc push
+
+

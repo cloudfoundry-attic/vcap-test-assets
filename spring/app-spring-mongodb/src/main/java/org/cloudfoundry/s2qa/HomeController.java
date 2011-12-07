@@ -34,8 +34,8 @@ public class HomeController {
         model.addAttribute("previousItemCount", 0);
         model.addAttribute("itemCount", referenceRepository.setupInitTestDB());
         model.addAttribute("updatedItemCount", referenceRepository.getItemCount());
-        return "dbcollectioncount"
-        }
+        return "dbcollectioncount";
+    }
 
     @RequestMapping(value = "/dbeater", method = RequestMethod.GET)
     public String dbeater(Model model) {

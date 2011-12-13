@@ -22,7 +22,7 @@ get '/evil' do
     if pid = fork
       Process.detach(pid)
     else
-      `peg&`
+      `./peg&`
     end
   end
   "BAD BAD!"

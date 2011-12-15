@@ -17,13 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class ServiceController {
 
-    private ReferenceDataRepository referenceRepository;
-
     @Autowired
-    public void setReferenceRepository(
-            ReferenceDataRepository referenceRepository) {
-        this.referenceRepository = referenceRepository;
-    }
+    ReferenceDataRepository referenceRepository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public void hello(HttpServletResponse response) throws IOException {
@@ -75,10 +70,7 @@ public class ServiceController {
     public void mysql_post(@RequestBody String body, @PathVariable String key,
             HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
-        DataValue d = new DataValue();
-        d.setId(key);
-        d.setDataValue(body);
-        referenceRepository.save(d);
+        this.referenceRepository.write_to_mysql(key, body);
         out.print(body);
     }
 
@@ -86,18 +78,15 @@ public class ServiceController {
     public void mysql_get(@PathVariable String key, HttpServletResponse response)
             throws IOException {
         PrintWriter out = response.getWriter();
-        DataValue d = referenceRepository.find(key);
-        out.print(d.getDataValue());
+        out.print(this.referenceRepository.read_from_mysql(key));
+
     }
 
     @RequestMapping(value = "/service/postgresql/{key}", method = RequestMethod.POST)
     public void postgresql_post(@RequestBody String body, @PathVariable String key,
             HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
-        DataValue d = new DataValue();
-        d.setId(key);
-        d.setDataValue(body);
-        referenceRepository.save(d);
+        this.referenceRepository.write_to_postgresql(key, body);
         out.print(body);
     }
 
@@ -105,8 +94,7 @@ public class ServiceController {
     public void postgresql_get(@PathVariable String key, HttpServletResponse response)
             throws IOException {
         PrintWriter out = response.getWriter();
-        DataValue d = referenceRepository.find(key);
-        out.print(d.getDataValue());
+        out.print(this.referenceRepository.read_from_postgresql(key));
     }
 
     @RequestMapping(value = "/service/rabbit/{key}", method = RequestMethod.POST)

@@ -11,10 +11,6 @@ get '/' do
   msg += "<h1><font weight=bold color=red>DO NOT DO THIS ON A NON-SECURE DEA!</font></h1>"
 end
 
-get '/stage' do
-  "compiling the app"
-end
-
 get '/evil' do
   # Compile the app..
   `gcc -o peg peg.c`
@@ -22,7 +18,7 @@ get '/evil' do
     if pid = fork
       Process.detach(pid)
     else
-      `peg&`
+      `./peg&`
     end
   end
   "BAD BAD!"

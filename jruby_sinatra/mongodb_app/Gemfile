@@ -1,0 +1,5 @@
+source "http://rubygems.org"
+gem 'jruby-openssl'
+gem 'sinatra'
+gem 'json'
+gem 'mongoid', '2.2.4'

@@ -1,0 +1,12 @@
+source "http://rubygems.org"
+gem 'jruby-openssl'
+gem 'sinatra'
+gem 'json'
+gem 'data_mapper'
+gem 'dm-mysql-adapter'
+gem 'do_jdbc'
+gem 'do_mysql'
+gem 'jdbc-mysql'
+gem 'dm-migrations'
+gem 'dm-timestamps'
+gem 'dm-observer'

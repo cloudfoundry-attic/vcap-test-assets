@@ -50,6 +50,7 @@ public class ReferenceDataRepository {
         String vendor = getDBVendor();
         //make sure we are starting from scratch...
         this.jdbcTemplate.execute("drop table if exists current_items");
+        this.jdbcTemplate.execute("drop table if exists item_taxes");
 
         if (vendor.equalsIgnoreCase("mysql")) {
             this.jdbcTemplate.execute("create table current_items (id INT(3) PRIMARY KEY AUTO_INCREMENT, item_code char(2), name varchar(1024))");
@@ -115,7 +116,7 @@ public class ReferenceDataRepository {
     }
 
     public int removeItems() {
-        this.jdbcTemplate.update("delete from current_items where id > 10000");
+        this.jdbcTemplate.update("delete from current_items where id > 5000");
         int slimmerRowCount = this.jdbcTemplate.queryForInt("select count(*) from current_items");
         return slimmerRowCount;
     }

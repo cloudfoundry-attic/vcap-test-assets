@@ -18,8 +18,8 @@
        <c:if test="${not empty allTables}">
            <p>
            <c:forEach var="table" items="${allTables}">
-               <c:if test="${table == 'current_items'}">
-                      <p>PASS: current_item table found. </p>
+               <c:if test="${table == 'item_taxes'}">
+                      <p>PASS: item_taxes table found. </p>
                </c:if>
                <c:out value="${table}"/></br>
            </c:forEach>

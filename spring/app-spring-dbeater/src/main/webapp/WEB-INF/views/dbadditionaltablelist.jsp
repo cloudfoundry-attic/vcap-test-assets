@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page session="false" %>
 <html>
 <head>
@@ -18,8 +19,8 @@
        <c:if test="${not empty allTables}">
            <p>
            <c:forEach var="table" items="${allTables}">
-               <c:if test="${table == 'current_items'}">
-                      <p>PASS: current_item table found. </p>
+               <c:if test="${fn:contains(table,'other_categories_')}">
+                      <p>PASS: other_categories table(s) found. </p>
                </c:if>
                <c:out value="${table}"/></br>
            </c:forEach>

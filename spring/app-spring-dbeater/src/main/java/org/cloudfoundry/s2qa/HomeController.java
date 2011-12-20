@@ -85,7 +85,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
         model.addAttribute("dbInfo", referenceRepository.getDbInfo());
         model.addAttribute("itemExists", referenceRepository.addNewItemCategories());
         model.addAttribute("allTables", referenceRepository.findAllTables());
-        return "dbtablelist";
+        return "dbadditionaltablelist";
     }
 
     @RequestMapping(value = "/addtaxtable", method = RequestMethod.GET)
@@ -94,7 +94,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
         model.addAttribute("dbInfo", referenceRepository.getDbInfo());
         model.addAttribute("itemExists", referenceRepository.addTaxTable());
         model.addAttribute("allTables", referenceRepository.findAllTables());
-        return "dbtablelist";
+        return "dbtaxtablelist";
     }
 
     @RequestMapping(value = "/differentview", method = RequestMethod.GET)

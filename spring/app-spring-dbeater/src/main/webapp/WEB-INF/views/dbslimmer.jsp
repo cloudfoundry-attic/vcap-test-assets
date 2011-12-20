@@ -16,24 +16,15 @@
        </p>
 
    <h4>New Slimmer ItemCount:</h4>
-       <p>
-           <c:out value="${slimmerItemCount}"/></br>
-       </p>
-   <c:if test="${empty slimmerItemCount}">
-       <p>No Items found</p>
-   </c:if>
    <c:if test="${empty updatedItemCount}">
        <p>No Items found</p>
    </c:if>
-   <c:if test="${updatedItemCount <= previousItemCount}">
-       <p>FAIL: Expected new current_items count to be greater than previous current_items count</p>
+   <c:if test="${updatedItemCount > previousItemCount}">
+       <p>FAIL: Expected new current_items count to be lesser than previous current_items count</p>
        <c:out value="${updatedItemCount}"/></br>
    </c:if>
-   <c:if test="${empty updatedItemCount}">
-       <p>FAIL: No Current Items found</p>
-   </c:if>
-   <c:if test="${updatedItemCount >= previousItemCount}">
-       <p>PASS: found new entries in current_items table</p>
+   <c:if test="${updatedItemCount <= previousItemCount}">
+       <p>PASS: found fewer or equal number of items in current_items table</p>
        <c:out value="${updatedItemCount}"/></br>
    </c:if>
 </body>

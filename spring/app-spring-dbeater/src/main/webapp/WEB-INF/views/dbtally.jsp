@@ -14,6 +14,9 @@
         <p>
                 <c:out value="${currentItemCount}"/></br>
         </p>
+    <c:if test="${not empty currentItemCount}">
+        <p>PASS: ${currentItemCount} items found</p>
+    </c:if>
     <c:if test="${empty currentItemCount}">
         <p>No Items found</p>
     </c:if>

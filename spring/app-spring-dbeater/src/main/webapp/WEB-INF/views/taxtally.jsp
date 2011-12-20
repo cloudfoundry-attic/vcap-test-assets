@@ -17,9 +17,10 @@
                 <c:out value="${taxItem}"/></br>
             </c:forEach>
         </p>
+        <p>PASS: TaxItems found</p>
     </c:if>
     <c:if test="${empty taxItems}">
-        <p>No TaxItems found</p>
+        <p>FAIL: No TaxItems found</p>
     </c:if>
 </body>
 </html>

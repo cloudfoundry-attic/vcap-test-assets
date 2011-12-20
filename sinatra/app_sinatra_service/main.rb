@@ -48,7 +48,13 @@ end
 post '/service/mysql/:key' do
   client = load_mysql
   value = request.env["rack.input"].read
-  result = client.query("insert into data_values (id, data_value) values('#{params[:key]}','#{value}');")
+  key = params[:key]
+  result = client.query("select * from data_values where id='#{key}'")
+  if result.count > 0
+    client.query("update data_values set data_value='#{value}' where id='#{key}'")
+  else
+    client.query("insert into data_values (id, data_value) values('#{key}','#{value}');")
+  end
   client.close
   value
 end

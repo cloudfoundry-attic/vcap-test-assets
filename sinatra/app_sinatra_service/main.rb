@@ -32,7 +32,11 @@ end
 post '/service/mongo/:key' do
   coll = load_mongo
   value = request.env["rack.input"].read
-  coll.insert( { '_id' => params[:key], 'data_value' => value } )
+  if coll.find('_id' => params[:key]).to_a.empty?
+    coll.insert( { '_id' => params[:key], 'data_value' => value } )
+  else
+    coll.update( { '_id' => params[:key] }, { '_id' => params[:key], 'data_value' => value } )
+  end
   value
 end
 

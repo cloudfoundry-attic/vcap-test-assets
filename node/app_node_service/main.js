@@ -4,7 +4,9 @@ var url_lib = require('url');
 var mongodb = require('./lib/node-mongodb-native/lib/mongodb');
 var nerve = require( './lib/nerve/lib/nerve' ),
     get = nerve.get,
-    post = nerve.post;
+    post = nerve.post,
+    put = nerve.put,
+    del = nerve.del;
 
 var msg_value="";
 
@@ -48,6 +50,23 @@ var app = [
       res.end();
     });
   }],
+  [put(/^\/service\/redis\/(\w+)$/), function(req, res, key) {
+    getBody(req, function(body){
+      var client = redis_services();
+      client.stream.on( 'connect', function() {
+        client.set( key, body );
+        client.quit();
+      });
+      res.end();
+    });
+  }],
+  [del(/^\/service\/redis\/(\w+)$/), function(req, res, key) {
+    var client = redis_services();
+    client.stream.on( 'connect', function() {
+      client.del(key);
+      client.quit();
+    });
+  }],
   [get(/^\/service\/postgresql\/(\w+)$/), function(req, res, key) {
     client = postgres_services(res);
     client.query("select data_value from  data_values where id='" + key  + "'", function(err, results, fields){
@@ -63,6 +82,19 @@ var app = [
     });
     res.end();
   }],
+  [put(/^\/service\/postgresql\/(\w+)$/), function(req, res, key) {
+    getBody(req, function(body){
+      client = postgres_services(res);
+      client.query("update data_values set data_value='"+ body + "' where id='" + key +"';");
+      client.close();
+    });
+    res.end();
+  }],
+  [del(/^\/service\/postgresql\/(\w+)$/), function(req, res, key) {
+    client = postgres_services();
+    client.query("delete from data_values;");
+    client.end();
+   }],
   [get(/^\/service\/mysql\/(\w+)$/), function(req, res, key) {
     client = mysql_services();
     client.query('select data_value from  data_values where id = \''+ key+'\'', function(err, results, fields){
@@ -77,6 +109,19 @@ var app = [
       client.end();
     });
     res.end();
+  }],
+  [put(/^\/service\/mysql\/(\w+)$/), function(req, res, key) {
+    getBody(req, function(body){
+      client = mysql_services(res);
+      client.query("update data_values set data_value='"+ body + "' where id='" + key +"';");
+      client.end();
+     });
+     res.end();
+  }],
+  [del(/^\/service\/mysql\/(\w+)$/), function(req, res, key) {
+    client = mysql_services();
+    client.query("delete from data_values;");
+    client.end();
   }],
   [get(/^\/service\/mongo\/(\w+)$/), function(req, res, key) {
     var mongo_service = load_service('mongodb');
@@ -108,6 +153,37 @@ var app = [
       res.end();
     });
   }],
+  [put(/^\/service\/mongo\/(\w+)$/), function(req, res, key) {
+    getBody(req, function(body){
+      var mongo_service = load_service('mongodb');
+      var db = new mongodb.Db(mongo_service["db"], new mongodb.Server(mongo_service["hostname"], mongo_service["port"], {}), {});
+      db.open(function (error, client) {
+        db.authenticate(mongo_service["username"], mongo_service["password"], function(err, replies) {
+          var collection = new mongodb.Collection(client, 'test_collection');
+          collection.findOne({'key': key}, function(err, document) {
+            document.data_value = body;
+            collection.update({ 'key' : key }, document, function(err, document) {
+              db.close();
+            });
+          });
+        });
+      });
+      res.end();
+    });
+  }],
+  [del(/^\/service\/mongo\/(\w+)$/), function(req, res, key) {
+    var mongo_service = load_service('mongodb');
+    var db = new mongodb.Db(mongo_service["db"], new mongodb.Server(mongo_service["hostname"], mongo_service["port"], {}), {});
+    db.open(function (error, client) {
+      db.authenticate(mongo_service["username"], mongo_service["password"], function(err, replies) {
+        db.collection('test_collection', function(err, collection) {
+          collection.remove({'key': key }, function(err, removed) {
+            db.close();
+          });
+        });
+      });
+    });
+  }],
   [get(/^\/service\/rabbit\/(\w+)$/), function(req, res, key) {
     res.end(msg_value);
   }],
@@ -137,6 +213,25 @@ var app = [
           res.end();
         });
       });
+    });
+  }],
+  [put(/^\/service\/rabbitmq\/(\w+)$/), function(req, res, key) {
+    getBody(req, function(body) {
+      rabbitmq_services(function(conn, queue) {
+        queue.bind("#");
+        queue.on('queueBindOk', function() {
+          conn.publish(key, {'data_value' : body});
+          setTimeout(function () {
+            conn.end();
+          }, 1000);
+          res.end();
+        });
+      });
+    });
+  }],
+  [del(/^\/service\/rabbitmq\/(\w+)$/), function(req, res, key) {
+    rabbitmq_services(function(conn, queue) {
+      queue.delete();
     });
   }],
 ];

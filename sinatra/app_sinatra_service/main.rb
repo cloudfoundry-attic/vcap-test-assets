@@ -71,6 +71,34 @@ get '/service/mysql/:key' do
   value
 end
 
+put '/service/mysql/table/:table' do
+  client = load_mysql
+  client.query("create table #{params[:table]} (x int);")
+  client.close
+  params[:table]
+end
+
+delete '/service/mysql/:object/:name' do
+  client = load_mysql
+  client.query("drop #{params[:object]} #{params[:name]};")
+  client.close
+  params[:name]
+end
+
+put '/service/mysql/function/:function' do
+  client = load_mysql
+  client.query("create function #{params[:function]}() returns int return 1234;");
+  client.close
+  params[:function]
+end
+
+put '/service/mysql/procedure/:procedure' do
+  client = load_mysql
+  client.query("create procedure #{params[:procedure]}() begin end;");
+  client.close
+  params[:procedure]
+end
+
 post '/service/postgresql/:key' do
   client = load_postgresql
   value = request.env["rack.input"].read
@@ -84,6 +112,37 @@ get '/service/postgresql/:key' do
   value = client.query("select data_value from  data_values where id = '#{params[:key]}'").first['data_value']
   client.close
   value
+end
+
+put '/service/postgresql/table/:table' do
+  client = load_postgresql
+  client.query("create table #{params[:table]} (x int);")
+  client.close
+  params[:table]
+end
+
+delete '/service/postgresql/:object/:name' do
+  client = load_postgresql
+  object = params[:object]
+  name = params[:name]
+  name += "()" if object=="function" # PG 'drop function' docs: "The argument types to the function must be specified"
+  client.query("drop #{object} #{name};")
+  client.close
+  name
+end
+
+put '/service/postgresql/function/:function' do
+  client = load_postgresql
+  client.query("create function #{params[:function]}() returns integer as 'select 1234;' language sql;")
+  client.close
+  params[:function]
+end
+
+put '/service/postgresql/sequence/:sequence' do
+  client = load_postgresql
+  client.query("create sequence #{params[:sequence]};")
+  client.close
+  params[:sequence]
 end
 
 post '/service/rabbit/:key' do

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="testBean" class="org.cloudfoundry.samples.AllBeansLister"/>
+
+    <bean id="postProcessor" class="org.cloudfoundry.reconfiguration.CloudAutoStagingBeanFactoryPostProcessor"/>
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.vmware.sqlfire.jdbc.ClientDriver" />
+		<property name="url" value="jdbc:sqlfire://127.0.0.1:10000" />
+	</bean>
+
+	<jdbc:initialize-database data-source="dataSource" ignore-failures="DROPS">
+		<jdbc:script location="classpath:db-schema.sql"/>
+	</jdbc:initialize-database>
+
+</beans>

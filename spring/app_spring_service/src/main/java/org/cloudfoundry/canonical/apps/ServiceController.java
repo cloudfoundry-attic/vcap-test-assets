@@ -109,6 +109,25 @@ public class ServiceController {
         out.print(d.getDataValue());
     }
 
+    @RequestMapping(value = "/service/sqlfire/{key}", method = RequestMethod.POST)
+    public void sqlfire_post(@RequestBody String body, @PathVariable String key,
+            HttpServletResponse response) throws IOException {
+        PrintWriter out = response.getWriter();
+        DataValue d = new DataValue();
+        d.setId(key);
+        d.setDataValue(body);
+        referenceRepository.save(d);
+        out.print(body);
+    }
+
+    @RequestMapping(value = "/service/sqlfire/{key}", method = RequestMethod.GET)
+    public void sqlfire_get(@PathVariable String key, HttpServletResponse response)
+            throws IOException {
+        PrintWriter out = response.getWriter();
+        DataValue d = referenceRepository.find(key);
+        out.print(d.getDataValue());
+    }
+
     @RequestMapping(value = "/service/rabbit/{key}", method = RequestMethod.POST)
     public void rabbit_post(@RequestBody String body, @PathVariable String key,
             HttpServletResponse response) throws IOException {

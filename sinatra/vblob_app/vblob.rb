@@ -5,21 +5,21 @@ require 'aws/s3'
 require 'json'
 
 services = JSON.parse(ENV['VCAP_SERVICES'])
-blob_gw = nil
+vblob_gw = nil
 services.each do |k,v|
   puts "#{k}"
   if k.match(/^vblob-/)
-    blob_gw = v
+    vblob_gw = v
   end
 end
 
 begin
 AWS::S3::Base.establish_connection!(
-    :access_key_id     => blob_gw[0]['credentials']['username'],
-    :secret_access_key => blob_gw[0]['credentials']['password'],
-    :port => blob_gw[0]['credentials']['port'],
-    :server => blob_gw[0]['credentials']['host']
-  ) unless blob_gw == nil
+    :access_key_id     => vblob_gw[0]['credentials']['username'],
+    :secret_access_key => vblob_gw[0]['credentials']['password'],
+    :port => vblob_gw[0]['credentials']['port'],
+    :server => vblob_gw[0]['credentials']['host']
+  ) unless vblob_gw == nil
 rescue => e
   puts "#{e}"
 end
@@ -39,7 +39,7 @@ get '/env' do
 end
 
 get '/list' do
-  if blob_gw == nil
+  if vblob_gw == nil
     return
   end
   buckets = AWS::S3::Service.buckets(:reload)

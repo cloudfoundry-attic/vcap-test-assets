@@ -2,4 +2,4 @@ source :rubygems
 
 gem "sinatra"
 gem "json"
-gem "net-http-digest_auth", "~> 1.2"
+gem "aws-s3"

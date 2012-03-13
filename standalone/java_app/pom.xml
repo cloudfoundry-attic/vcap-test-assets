@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.cloudfoundry.samples</groupId>
+  <artifactId>standalone-java-app</artifactId>
+  <version>1.0.0.BUILD-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>Simple Standalone Java App</name>
+
+  <dependencies>
+  </dependencies>
+
+ <build>
+  <plugins>
+    <plugin>
+     <groupId>org.codehaus.mojo</groupId>
+     <artifactId>appassembler-maven-plugin</artifactId>
+     <version>1.1.1</version>
+     <executions>
+        <execution>
+            <phase>package</phase>
+            <goals>
+                <goal>assemble</goal>
+            </goals>
+            <configuration>
+              <assembledirectory>target</assembledirectory>
+              <programs>
+                <program>
+                  <mainClass>HelloCloud</mainClass>
+                </program>
+              </programs>
+            </configuration>
+        </execution>
+    </executions>
+  </plugin>
+  <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <configuration>
+      <source>1.6</source>
+      <target>1.6</target>
+    </configuration>
+  </plugin>
+  </plugins>
+</build>
+</project>

@@ -1,0 +1,13 @@
+<assembly>
+   <id>script</id>
+   <formats>
+      <format>zip</format>
+   </formats>
+    <files>
+       <file>
+          <source>simple.sh</source>
+          <destName>simple.sh</destName>
+          <outputDirectory>bin</outputDirectory>
+       </file>
+    </files>
+</assembly>

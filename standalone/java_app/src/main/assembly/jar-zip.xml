@@ -1,0 +1,13 @@
+<assembly>
+   <id>jar</id>
+   <formats>
+      <format>zip</format>
+   </formats>
+    <files>
+       <file>
+          <source>target/standalone-java-app-1.0.0.BUILD-SNAPSHOT.jar</source>
+          <destName>standalone-java-app.jar</destName>
+          <outputDirectory>lib</outputDirectory>
+       </file>
+    </files>
+</assembly>

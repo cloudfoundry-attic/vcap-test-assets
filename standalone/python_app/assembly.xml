@@ -1,0 +1,13 @@
+<assembly>
+   <id>script</id>
+   <formats>
+      <format>zip</format>
+   </formats>
+    <files>
+       <file>
+          <source>HelloWorld.py</source>
+          <destName>HelloWorld.py</destName>
+          <outputDirectory>bin</outputDirectory>
+       </file>
+    </files>
+</assembly>

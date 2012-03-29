@@ -64,7 +64,12 @@ end
 post '/service/postgresql/:key' do
   client = load_postgresql
   value = request.env["rack.input"].read
-  client.query("insert into data_values (id, data_value) values('#{params[:key]}','#{value}');")
+  result = client.query("select * from data_values where id = '#{params[:key]}'")
+  if result.count > 0
+    client.query("update data_values set data_value='#{value}' where id = '#{params[:key]}'")
+  else
+    client.query("insert into data_values (id, data_value) values('#{params[:key]}','#{value}');")
+  end
   client.close
   value
 end

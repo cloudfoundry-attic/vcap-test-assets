@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>org.cloudfoundry.samples</groupId>
+<artifactId>todolist-with-cfruntime</artifactId>
+<packaging>play2</packaging>
+<name>todolist-with-cfruntime</name>
+<version>0.1.0.BUILD-SNAPSHOT</version>
+<build>
+     <plugins>
+          <plugin>
+               <groupId>de.akquinet.innovation.play2</groupId>
+               <artifactId>play2-maven-plugin</artifactId>
+               <version>1.0.1</version>
+               <extensions>true</extensions>
+          </plugin>
+     </plugins>
+</build>
+</project>

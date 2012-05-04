@@ -3,6 +3,6 @@
   "version" : "0.1.0",
   "dependencies" : {
     "express" : "",
-    "bcrypt" : "" // to test that native dependencies work correctly
+    "bcrypt" : ""
   }
 }

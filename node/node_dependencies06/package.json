@@ -1,8 +1,8 @@
 {
-  "name" : "node-dependencies",
+  "name" : "node-dependencies06",
   "version" : "0.1.0",
   "dependencies" : {
     "express" : "2.5.x",
-    "bcrypt" : "" // to test that native dependencies work correctly
+    "bcrypt" : ""
   }
 }

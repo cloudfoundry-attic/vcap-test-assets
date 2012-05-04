@@ -4,6 +4,7 @@ require 'json'
 require 'mongo'
 require 'mysql2'
 require 'carrot'
+require 'aws/s3'
 require 'uri'
 require 'pg'
 
@@ -174,6 +175,41 @@ get '/service/rabbitmq/:key' do
   read_from_rabbit(params[:key], client)
 end
 
+get '/service/vblob/list' do
+  load_vblob
+  AWS::S3::Service.buckets(:reload).inspect rescue "list failed: #{$!} at #{$@}"
+end
+
+post '/service/vblob/:bucket' do
+  load_vblob
+  AWS::S3::Bucket.create(params[:bucket]) rescue "create bucket: #{params[:bucket]} failed: #{$!} at #{$@}"
+end
+
+get '/service/vblob/:bucket' do
+  load_vblob
+  AWS::S3::Bucket.find(params[:bucket]).inspect rescue "fetch bucket: #{params[:bucket]} failed: #{$!} at #{$@}"
+end
+
+delete '/service/vblob/:bucket' do
+  load_vblob
+  AWS::S3::Bucket.delete(params[:bucket]) rescue "delete bucket: #{params[:bucket]} failed: #{$!} at #{$@}"
+end
+
+post '/service/vblob/:bucket/:object' do
+  load_vblob
+  AWS::S3::S3Object.store(params[:object], request.body, params[:bucket]) rescue "post object:#{params[:object]} in bucket: #{params[:bucket]} failed: #{$!} at #{$@}"
+end
+
+get '/service/vblob/:bucket/:object' do
+  load_vblob
+  AWS::S3::S3Object.value(params[:object], params[:bucket]).inspect rescue "get object:#{params[:object]} in bucket: #{params[:bucket]} failed: #{$!} at #{$@}"
+end
+
+delete '/service/vblob/:bucket/:object' do
+  load_vblob
+  AWS::S3::S3Object.delete(params[:object], params[:bucket]) rescue "delete object:#{params[:object]} in bucket: #{params[:bucket]} failed: #{$!} at #{$@}"
+end
+
 def load_redis
   redis_service = load_service('redis')
   Redis.new({:host => redis_service["hostname"], :port => redis_service["port"], :password => redis_service["password"]})
@@ -199,6 +235,16 @@ def load_postgresql
   client = PGconn.open(postgresql_service['host'], postgresql_service['port'], :dbname => postgresql_service['name'], :user => postgresql_service['username'], :password => postgresql_service['password'])
   client.query("create table data_values (id varchar(20), data_value varchar(20));") if client.query("select * from pg_catalog.pg_class where relname = 'data_values';").num_tuples() < 1
   client
+end
+
+def load_vblob
+  vblob_service = load_service('vblob')
+  AWS::S3::Base.establish_connection!(
+    :access_key_id      => vblob_service['username'],
+    :secret_access_key  => vblob_service['password'],
+    :port               => vblob_service['port'],
+    :server             => vblob_service['host']
+  ) unless vblob_service == nil
 end
 
 def load_service(service_name)

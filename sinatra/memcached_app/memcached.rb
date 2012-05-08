@@ -6,7 +6,7 @@ require 'dalli'
 
 
 def get_memcached_service_info
-  services = JSON.parse(ENV['VCAP_SERVICES']) 
+  services = JSON.parse(ENV['VCAP_SERVICES'])
   memcached_key = services.keys.select { |srv| srv =~ /memcached/i }.first
   memcached = services[memcached_key].first['credentials']
   [memcached['host'], memcached['port'], memcached['user'], memcached['password']]
@@ -14,7 +14,7 @@ end
 
 def get_dalli_client
   host, port, user, pass = get_memcached_service_info
-  Dalli::Client.new("#{host}\:#{port}", :username => user, :password => pass)
+  Dalli::Client.new("#{host}:#{port}", :username => user, :password => pass)
 end
 
 get '/' do
@@ -52,11 +52,11 @@ get '/mcget/:key' do
     "<H1>Getting from memcached</H1>" \
     "<b>#{params[:key]}</b> maps to #{value}"
   rescue => ex
-    "Error: #{ex.to_s}"
+    "Error: #{ex}"
   end
 end
 
-# NOTE: this should really be post, but we use get here for ease of testing 
+# NOTE: this should really be post, but we use get here for ease of testing
 # directly using a browser
 get '/mcput/:key/:value' do
    begin
@@ -66,7 +66,7 @@ get '/mcput/:key/:value' do
      "<H1>Saved to memcached</H1>" \
      "<b>#{params[:key]}</b> = #{params[:value]}"
    rescue => ex
-     "Error: #{ex.to_s}"
+     "Error: #{ex}"
    end
 end
 
@@ -89,6 +89,6 @@ post '/storeincache' do
      "<H1>Saved to memcached</H1>" \
      "<b>#{params[:key]}</b> = #{params[:value]}"
    rescue => ex
-     "Error: #{ex.to_s}"
+     "Error: #{ex}"
    end
 end

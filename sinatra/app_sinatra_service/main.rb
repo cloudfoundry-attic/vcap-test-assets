@@ -202,7 +202,7 @@ end
 
 get '/service/vblob/:bucket/:object' do
   load_vblob
-  AWS::S3::S3Object.value(params[:object], params[:bucket]).inspect rescue "get object:#{params[:object]} in bucket: #{params[:bucket]} failed: #{$!} at #{$@}"
+  AWS::S3::S3Object.value(params[:object], params[:bucket]) rescue "get object:#{params[:object]} in bucket: #{params[:bucket]} failed: #{$!} at #{$@}"
 end
 
 delete '/service/vblob/:bucket/:object' do

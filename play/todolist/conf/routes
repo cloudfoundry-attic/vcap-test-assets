@@ -5,6 +5,9 @@
 # Home page
 GET     /                       controllers.Application.index()
 
+# Java version
+GET     /java                   controllers.Application.java()
+
 # Tasks
 GET     /tasks                  controllers.Application.tasks()
 POST    /tasks                  controllers.Application.newTask()

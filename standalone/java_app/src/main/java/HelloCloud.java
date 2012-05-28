@@ -9,7 +9,8 @@ public class HelloCloud {
                         userDir = userDir.substring(0,userDir.length()-4);
                         javaopts = javaopts.replaceAll(userDir,"appdir");
                 }
-		System.out.print("Hello from the cloud.  Java opts: " + javaopts);
+		System.out.print("Hello from the cloud.  Java opts: " + javaopts +
+				"  Java version: " + System.getProperty("java.version"));
 		while(true) {
 			try {
 				Thread.sleep(120000);

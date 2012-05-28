@@ -147,4 +147,11 @@ public class ServiceController {
         CloudEnvironment env = this.referenceRepository.environment();
         out.println(env.getValue("VCAP_SERVICES"));
     }
+
+    @RequestMapping(value = "/java", method = RequestMethod.GET)
+    public void java(HttpServletResponse response) throws IOException {
+        response.setContentType("text/plain");
+        PrintWriter out = response.getWriter();
+        out.println(System.getProperty("java.version"));
+    }
 }

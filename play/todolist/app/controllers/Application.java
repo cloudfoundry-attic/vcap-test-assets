@@ -16,6 +16,10 @@ public class Application extends Controller {
 	    return redirect(routes.Application.tasks());
 	  }
 
+	public static Result java() {
+		return status(200, System.getProperty("java.version"));
+	}
+
 	  public static Result tasks() {
             return ok(
             views.html.index.render(Task.all(), taskForm));

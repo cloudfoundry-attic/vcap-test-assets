@@ -11,6 +11,7 @@ app.get("/", function(req, res) {
 });
 
 var port = process.env.VCAP_APP_PORT || 3000;
-app.listen(port);
 
-console.log("Express server started on port %s", app.address().port);
+app.listen(port, function () {
+  console.log("Express server started on port %s", app.address().port);
+});

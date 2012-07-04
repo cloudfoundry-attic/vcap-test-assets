@@ -78,24 +78,27 @@ var app = [
   [post(/^\/service\/postgresql\/(\w+)$/), function(req, res, key) {
     getBody(req, function(body){
       client = postgres_services(res);
-      client.query("insert into data_values (id, data_value) values('"+key+"','"+body+"');");
-      client.close();
+      client.query("insert into data_values (id, data_value) values('"+key+"','"+body+"');", function() {
+        client.close();
+        res.end();
+      });
     });
-    res.end();
   }],
   [put(/^\/service\/postgresql\/(\w+)$/), function(req, res, key) {
     getBody(req, function(body){
       client = postgres_services(res);
-      client.query("update data_values set data_value='"+ body + "' where id='" + key +"';");
-      client.close();
+      client.query("update data_values set data_value='"+ body + "' where id='" + key +"';", function() {
+        client.close();
+        res.end();
+      });
     });
-    res.end();
   }],
   [del(/^\/service\/postgresql\/(\w+)$/), function(req, res, key) {
     client = postgres_services();
-    client.query("delete from data_values;");
-    client.end();
-    res.end();
+    client.query("delete from data_values;", function() {
+      client.close();
+      res.end();
+    });
    }],
   [get(/^\/service\/mysql\/(\w+)$/), function(req, res, key) {
     client = mysql_services();

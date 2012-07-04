@@ -238,7 +238,7 @@ def load_postgresql
 end
 
 def load_vblob
-  vblob_service = load_service('vblob')
+  vblob_service = load_service('blob')
   AWS::S3::Base.establish_connection!(
     :access_key_id      => vblob_service['username'],
     :secret_access_key  => vblob_service['password'],

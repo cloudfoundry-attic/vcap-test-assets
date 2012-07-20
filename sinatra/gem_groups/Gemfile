@@ -1,0 +1,10 @@
+source "http://rubygems.org"
+gem 'sinatra'
+gem 'json'
+group :test do
+  gem 'rspec'
+end
+gem 'rubyzip', :group => :development
+gem 'thor', :groups => [:development, :test]
+gem 'uglifier', :platform => :ruby_18
+gem 'yajl-ruby', :platform => :ruby_19

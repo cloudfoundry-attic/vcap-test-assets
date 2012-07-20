@@ -1,0 +1,18 @@
+source "http://rubygems.org"
+# Without any bound services, app runs on sqlite3
+#.. but may also be staged with mysql
+gem 'mysql2'
+gem 'mongo'
+gem 'redis'
+gem 'sinatra'
+gem 'json'
+gem 'carrot'
+gem 'pg'
+gem 'aws-s3'
+group :test do
+  gem 'rspec'
+end
+gem 'rubyzip', :group => :development
+gem 'thor', :groups => [:development, :test]
+gem 'uglifier', :platform => :ruby_18
+gem 'yajl-ruby', :platform => :ruby_19

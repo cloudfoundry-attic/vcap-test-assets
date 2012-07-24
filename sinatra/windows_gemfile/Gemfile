@@ -1,0 +1,8 @@
+source "http://rubygems.org"
+# Without any bound services, app runs on sqlite3
+#.. but may also be staged with mysql
+gem 'mysql2'
+gem 'sinatra'
+gem 'json'
+gem 'pg'
+gem 'yajl-ruby', :platforms => :mswin

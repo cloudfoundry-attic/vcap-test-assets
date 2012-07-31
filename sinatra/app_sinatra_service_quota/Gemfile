@@ -5,3 +5,5 @@ gem 'sinatra'
 gem 'json'
 gem 'pg'
 gem "yajl-ruby"
+gem 'mysql2'
+gem 'eventmachine'

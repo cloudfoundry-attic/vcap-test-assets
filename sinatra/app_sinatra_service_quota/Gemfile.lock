@@ -1,7 +1,9 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    eventmachine (0.12.10)
     json (1.4.6)
+    mysql2 (0.3.11)
     pg (0.11.0)
     rack (1.2.2)
     sinatra (1.2.6)
@@ -14,7 +16,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  eventmachine
   json
+  mysql2
   pg
   sinatra
   yajl-ruby

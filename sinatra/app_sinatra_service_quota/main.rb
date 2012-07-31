@@ -3,6 +3,7 @@ require 'json'
 require 'uri'
 require 'pg'
 require "yajl"
+require 'eventmachine'
 
 get '/env' do
   ENV['VMC_SERVICES']
@@ -19,6 +20,56 @@ end
 
 not_found do
   'This is nowhere to be found.'
+end
+
+post '/service/mysql/querytime/:time' do
+  client = load_mysql
+  results = client.query("select sleep(#{params[:time]})")
+  client.close
+  res = 0
+  results.each{|rs|
+    res = rs.values[0].to_i
+  }
+  if res == 0
+    return "OK"
+  elsif res == 1
+    return "query interrupted"
+  end
+end
+
+post '/service/postgresql/querytime/:time' do
+  client = load_postgresql
+  begin
+    client.query("select pg_sleep(#{params[:time]})")
+    return "OK"
+  rescue Exception => e
+    puts e.message
+    return "query interrupted"
+  ensure
+    client.close if client
+  end
+end
+
+post '/service/mysql/txtime/:time' do
+  EventMachine.run{
+    client = load_mysql
+    client.query("drop table if exists a")
+    client.query("create table a (id int) engine=innodb")
+    client.query("begin")
+    client.query("select * from a for update")
+    EventMachine.add_timer(params[:time].to_i){
+      begin
+        client.query("select * from a for update")
+        return "OK"
+      rescue Exception => e
+        puts e.message
+        return "transaction interrupted"
+      ensure
+        client.close if client
+      end
+      EventMachine.stop
+    }
+  }
 end
 
 post '/service/postgresql/tables/:table' do
@@ -136,6 +187,12 @@ end
 def load_postgresql
   postgresql_service = load_service('postgresql')
   client = PGconn.open(postgresql_service['host'], postgresql_service['port'], :dbname => postgresql_service['name'], :user => postgresql_service['username'], :password => postgresql_service['password'])
+  client
+end
+
+def load_mysql
+  mysql_service = load_service('mysql')
+  client = Mysql2::Client.new(:host => mysql_service['hostname'], :port => mysql_service['port'], :username => mysql_service['user'], :password => mysql_service['password'])
   client
 end
 

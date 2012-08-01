@@ -5,6 +5,8 @@ require 'pg'
 require "yajl"
 require 'mysql2'
 require 'eventmachine'
+require 'time'
+require 'mongo'
 
 get '/env' do
   ENV['VMC_SERVICES']
@@ -72,6 +74,60 @@ post '/service/mysql/txtime/:time' do
       return result
     }
   }
+end
+
+post '/service/postgresql/txtime/:time' do
+  client = load_postgresql
+  client.query("drop table if exists a")
+  client.query("create table a (id int)")
+  client.query("insert into a values (10)")
+  client.query("begin")
+  begin
+    start_time = Time.now.to_i
+    cur_time = Time.now.to_i
+    while ((cur_time - start_time) < params[:time].to_i) do
+      client.query("select * from a")
+      cur_time = Time.now.to_i
+    end
+    result = "OK"
+  rescue Exception => e
+    puts e.message
+    result = "transaction interrupted"
+  ensure
+    client.close if client
+  end
+  result
+end
+
+post '/service/mongodb/:colname/:size' do
+  client = load_mongodb
+  begin
+    col = client[params[:colname]]
+    content = prepare_data(1)
+    i = 0
+    while i < params[:size].to_i do
+      i += 1
+      col.insert({"content"=>content,"name"=>"mongo#{i}"})
+      last_error = client.get_last_error
+      puts col.count()
+    end
+    return last_error['err']
+    #if reach quota_files limit, should be "db disk space quota exceeded db"
+  rescue Exception => e
+    puts e.message
+  end
+end
+
+get '/service/mongodb/:colname/:index' do
+  client = load_mongodb
+  begin
+    col = client[params[:colname]]
+    result = col.find({"name"=>"mango#{params[:index]}"})
+    return "OK" unless result.nil?
+  rescue Exception => e
+    puts e.message
+  end
+  "index not found"
 end
 
 post '/service/postgresql/tables/:table' do
@@ -195,6 +251,13 @@ end
 def load_mysql
   mysql_service = load_service('mysql')
   client = Mysql2::Client.new(:host => mysql_service['hostname'], :port => mysql_service['port'], :username => mysql_service['user'], :password => mysql_service['password'])
+  client
+end
+
+def load_mongodb
+  mongodb_service = load_service('mongodb')
+  conn = Mongo::Connection.new(mongodb_service['hostname'], mongodb_service['port'])
+  client = conn[mongodb_service['db']]
   client
 end
 

@@ -5,6 +5,7 @@ require 'pg'
 require "yajl"
 require 'mysql2'
 require 'eventmachine'
+require 'time'
 
 get '/env' do
   ENV['VMC_SERVICES']
@@ -72,6 +73,29 @@ post '/service/mysql/txtime/:time' do
       return result
     }
   }
+end
+
+post '/service/postgresql/txtime/:time' do
+  client = load_postgresql
+  client.query("drop table if exists a")
+  client.query("create table a (id int)")
+  client.query("insert into a values (10)")
+  client.query("begin")
+  begin
+    start_time = Time.now.to_i
+    cur_time = Time.now.to_i
+    while ((cur_time - start_time) < params[:time].to_i) do
+      client.query("select * from a")
+      cur_time = Time.now.to_i
+    end
+    result = "OK"
+  rescue Exception => e
+    puts e.message
+    result = "transaction interrupted"
+  ensure
+    client.close if client
+  end
+  result
 end
 
 post '/service/postgresql/tables/:table' do

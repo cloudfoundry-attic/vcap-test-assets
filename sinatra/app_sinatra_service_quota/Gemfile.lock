@@ -1,8 +1,11 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    bson (1.6.2)
     eventmachine (0.12.10)
     json (1.4.6)
+    mongo (1.6.2)
+      bson (~> 1.6.2)
     mysql2 (0.3.11)
     pg (0.11.0)
     rack (1.2.2)
@@ -18,6 +21,7 @@ PLATFORMS
 DEPENDENCIES
   eventmachine
   json
+  mongo
   mysql2
   pg
   sinatra

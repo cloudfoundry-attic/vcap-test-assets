@@ -7,3 +7,4 @@ gem 'pg'
 gem "yajl-ruby"
 gem 'mysql2'
 gem 'eventmachine'
+gem 'mongo'

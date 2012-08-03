@@ -27,6 +27,9 @@ end
 
 post '/service/mysql/querytime/:time' do
   client = load_mysql
+  client.query("DELIMITER //")
+  client.query("create function testhello() returns VARCHAR(255); return 'hello'; ")
+  client.query("//")
   results = client.query("select sleep(#{params[:time]})")
   client.close
   res = 0
@@ -99,7 +102,13 @@ post '/service/postgresql/txtime/:time' do
   result
 end
 
-post '/service/mongodb/:colname/:size' do
+get '/service/mongodb/db/storagesize' do
+  client = load_mongodb
+  size = client.stats()
+  return size["storageSize"].to_s
+end
+
+post '/service/mongodb/collection/:colname/:size' do
   client = load_mongodb
   begin
     col = client[params[:colname]]
@@ -122,12 +131,26 @@ get '/service/mongodb/:colname/:index' do
   client = load_mongodb
   begin
     col = client[params[:colname]]
-    result = col.find({"name"=>"mango#{params[:index]}"})
-    return "OK" unless result.nil?
+    result = col.find({"name"=>"mongo#{params[:index]}"})
+    return "OK" unless result.count() == 0
   rescue Exception => e
     puts e.message
   end
   "index not found"
+end
+
+post '/service/mongodb/delete/:colname/:size' do
+  client = load_mongodb
+  begin
+    col = client[params[:colname]]
+    params[:size].to_i.times do |i|
+      col.remove({"name"=>"mongo#{i}"})
+    end
+    client.close
+  rescue Exception => e
+    puts e.message
+  end
+  "DELETE OK"
 end
 
 post '/service/postgresql/tables/:table' do

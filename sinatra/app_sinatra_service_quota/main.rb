@@ -99,7 +99,13 @@ post '/service/postgresql/txtime/:time' do
   result
 end
 
-post '/service/mongodb/:colname/:size' do
+get '/service/mongodb/db/storagesize' do
+  client = load_mongodb
+  size = client.stats()
+  return size["storageSize"].to_s
+end
+
+post '/service/mongodb/collection' do
   client = load_mongodb
   begin
     col = client[params[:colname]]
@@ -118,16 +124,30 @@ post '/service/mongodb/:colname/:size' do
   end
 end
 
-get '/service/mongodb/:colname/:index' do
+get '/service/mongodb/collection' do
   client = load_mongodb
   begin
     col = client[params[:colname]]
-    result = col.find({"name"=>"mango#{params[:index]}"})
-    return "OK" unless result.nil?
+    result = col.find({"name"=>"mongo#{params[:index]}"})
+    return "OK" unless result.count() == 0
   rescue Exception => e
     puts e.message
   end
   "index not found"
+end
+
+delete '/service/mongodb/collection' do
+  client = load_mongodb
+  begin
+    col = client[params[:colname]]
+    params[:size].to_i.times do |i|
+      col.remove({"name"=>"mongo#{i}"})
+    end
+    client.close
+  rescue Exception => e
+    puts e.message
+  end
+  "DELETE OK"
 end
 
 post '/service/postgresql/tables/:table' do

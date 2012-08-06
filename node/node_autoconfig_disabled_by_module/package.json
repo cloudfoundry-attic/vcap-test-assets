@@ -1,0 +1,12 @@
+{
+  "name" : "node_autoconfig",
+  "version" : "0.1.0",
+  "dependencies" : {
+    "mysql" : "0.9.6",
+    "pg" : "0.6.18",
+    "redis" : "0.7.2",
+    "mongodb" : "1.0.2",
+    "amqp" : "0.1.3",
+    "cf-runtime" : ""
+  }
+}

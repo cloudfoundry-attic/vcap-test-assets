@@ -2,6 +2,10 @@ require 'sinatra'
 require 'json'
 require 'uri'
 require 'pg'
+require 'redis'
+require 'bunny'
+require 'mongo'
+require 'mysql2'
 require "yajl"
 require 'mysql2'
 require 'eventmachine'
@@ -19,7 +23,6 @@ end
 get '/crash' do
   Process.kill("KILL", Process.pid)
 end
-
 
 not_found do
   'This is nowhere to be found.'
@@ -150,11 +153,55 @@ delete '/service/mongodb/collection' do
   "DELETE OK"
 end
 
+post '/service/mysql/tables/:table' do
+  client = load_mysql
+  begin
+    client.query("create table #{params[:table]} (value mediumtext)")
+    params[:table]
+  rescue => e
+    "#{e}"
+  ensure
+    client.close if client
+  end
+end
+
+get '/service/mysql/tables/:table' do
+  client = load_mysql
+  begin
+    a = client.query("select value from #{params[:table]} limit 1")
+    if a.first['value'] != nil && a.first['value'] != ''
+      "ok"
+    else
+      "nil"
+    end
+  rescue => e
+    "#{e}"
+  ensure
+    client.close if client
+  end
+end
+
 post '/service/postgresql/tables/:table' do
   client = load_postgresql
   begin
     client.query("create table #{params[:table]} (value text);")
     params[:table]
+  rescue => e
+    "#{e}"
+  ensure
+    client.close if client
+  end
+end
+
+get '/service/postgresql/tables/:table' do
+  client = load_postgresql
+  begin
+    a = client.query("select value from #{params[:table]} limit 1")
+    if a.first['value'] != nil && a.first['value'] != ''
+      "ok"
+    else
+      "nil"
+    end
   rescue => e
     "#{e}"
   ensure
@@ -209,7 +256,15 @@ delete '/service/postgresql/tables/:name/data' do
   table
 end
 
-# get db size
+delete '/service/mysql/tables/:name/data' do
+  client = load_mysql
+  table = params[:name]
+  client.query("truncate table #{table};")
+  client.close
+  table
+end
+
+# get db size of postgresql
 get '/service/postgresql/database/size' do
   client = load_postgresql
   db_size = client.query("select pg_database_size('#{db_name}')").first['pg_database_size']
@@ -217,13 +272,46 @@ get '/service/postgresql/database/size' do
   db_size
 end
 
-# populate data into table
+# populate data into postgresql table
 post '/service/postgresql/tables/:name/:megabytes' do
   client = load_postgresql
   begin
     content = prepare_data(1)
     client = load_postgresql
+    sleep 1
     size = params[:megabytes].to_i
+    i = 0
+    while i < size do
+      client.query("insert into #{params[:name]} (value) values('#{content}');")
+      sleep 1 if i % 10 == 0
+      i += 1
+    end
+    'ok'
+  rescue => e
+    "#{e}"
+  ensure
+    client.close if client
+  end
+end
+
+# get db size of mysql
+get '/service/mysql/database/size' do
+  client = load_mysql
+  client.query("use information_schema")
+  db_size = client.query("select concat(round(sum(DATA_LENGTH/1024/1024),2),'MB') as data from TABLES")
+  db_size.each {|row|
+    puts row[0]
+  }
+  client.close
+  db_size.first.to_s
+end
+
+# populate data into mysql table
+post '/service/mysql/tables/:name/:megabytes' do
+  client = load_mysql
+  begin
+    size = params[:megabytes].to_i
+    content = prepare_data(1)
     i = 0
     while i < size do
       client.query("insert into #{params[:name]} (value) values('#{content}');")
@@ -236,6 +324,226 @@ post '/service/postgresql/tables/:name/:megabytes' do
     client.close if client
   end
 end
+
+# max_clients of mysql
+post '/service/mysql/clients/:clients' do
+  e1 = nil
+  threads = []
+  clients_number = 0
+  Thread.abort_on_exception = true
+  params[:clients].to_i.times do
+    threads << Thread.new do
+      begin
+        client = load_mysql
+        client.query("show tables")
+        sleep 5
+        clients_number += 1
+      rescue => e
+        e1 = e
+      end
+    end
+  end
+  threads.each { |t| t.join }
+  if e1
+    "#{clients_number}-#{e1}"
+  else
+    "ok"
+  end
+end
+
+# max_clients of postgresql
+post '/service/postgresql/clients/:clients' do
+  e1 = nil
+  threads = []
+  clients_number = 0
+  Thread.abort_on_exception = true
+  params[:clients].to_i.times do
+    threads << Thread.new do
+      begin
+        client = load_postgresql
+        client.query("select count(*) from pg_stat_activity")
+        sleep 5
+        clients_number += 1
+      rescue => e
+        e1 = e
+      end
+    end
+  end
+  threads.each { |t| t.join }
+  if e1
+    "#{clients_number}-#{e1}"
+  else
+    "ok"
+  end
+end
+
+# max clients of rabbitmq
+post '/service/rabbitmq/clients/:clients' do
+  e1 = nil
+  threads = []
+  clients_number = 0
+  Thread.abort_on_exception = false
+  params[:clients].to_i.times do
+    threads << Thread.new do
+      begin
+        client = nil
+        Timeout::timeout(1) {
+          client = load_rabbitmq
+          client.start
+        }
+        q = client.queue("test1")
+        e = client.exchange("")
+        e.publish("Hello, everybody!", :key => 'test1')
+        sleep 8
+        clients_number += 1
+      rescue Timeout::Error
+        e1 = 'connection timeout'
+      end
+    end
+  end
+  threads.each { |t| t.join }
+  if e1
+    "#{clients_number}-#{e1}"
+  else
+    "ok"
+  end
+end
+
+# max_clients of mongodb
+post '/service/mongodb/clients/:clients' do
+  e1 = nil
+  threads = []
+  Thread.abort_on_exception = true
+  clients_number = 0
+  params[:clients].to_i.times do
+    threads << Thread.new do
+      begin
+        client = load_mongodb
+        coll   = client['test']
+        coll.insert({'a' => 1})
+        sleep 10
+        clients_number += 1
+      rescue => e
+        if e != nil && e != ""
+          e1 = e
+        end
+      end
+    end
+  end
+  threads.each { |t| t.join }
+  if e1
+    "#{clients_number}-#{e1}"
+  else
+    "ok"
+  end
+end
+
+# max_clients of redis
+post '/service/redis/clients/:clients' do
+  e1 = nil
+  threads = []
+  Thread.abort_on_exception = true
+  clients_number = 0
+  params[:clients].to_i.times do
+    threads << Thread.new do
+      begin
+        client = load_redis
+        client.set('abc', 'test')
+        sleep 10
+        clients_number += 1
+      rescue => e
+        if e != nil && e != ""
+          e1 = e
+        end
+      end
+    end
+  end
+  threads.each { |t| t.join }
+  if e1
+    "#{clients_number}-#{e1}"
+  else
+    "ok"
+  end
+end
+
+# get memory usage of redis (MB)
+get '/service/redis/memory' do
+  used_memory = ''
+  client = load_redis
+  client.info.each {|i|
+    if i[0] == 'used_memory'
+      used_memory = i[1]
+      break
+    end
+  }
+  "#{used_memory.to_f / 1000000.0}"
+end
+
+# set data in redis
+post '/service/redis/set/:megabytes' do
+  client = load_redis
+  begin
+    content = prepare_data(1)
+    for i in 0..params[:megabytes].to_i-1
+      client.set(i.to_s, content)
+    end
+    "ok"
+  rescue => e
+    "#{e}"
+  end
+end
+
+# clear data in redis
+post '/service/redis/clear/:megabytes' do
+  client = load_redis
+  begin
+    for i in 0..params[:megabytes].to_i-1
+      client.set(i.to_s, '-')
+    end
+    "ok"
+  rescue => e
+    "#{e}"
+  end
+end
+
+# get data in redis
+get '/service/redis/data' do
+  begin
+    client = load_redis
+    v = client.get("0")
+    if v != nil && v != ''
+      return "ok"
+    end
+  rescue => e
+    "#{e}"
+  end
+end
+
+# post data in rabbitmq
+post '/service/rabbitmq/publish/:megabytes' do
+  e1 = nil
+  number = params[:megabytes].to_i
+  begin
+    client = load_rabbitmq
+    client.start
+    q = client.queue("test1")
+    e = client.exchange("")
+    for i in 0..number-1
+      data = prepare_data(1)
+      e.publish(data, :key => 'test1')
+    end
+    client.stop
+  rescue => e
+    e1 = e
+  end
+
+  if e1
+    "#{e1}"
+  else
+    "ok"
+  end
+end
+
 
 # helper methods
 helpers do
@@ -262,15 +570,29 @@ helpers do
   end
 end
 
+def load_mysql
+  mysql_service = load_service('mysql')
+  client = Mysql2::Client.new(:host => mysql_service['hostname'], :port => mysql_service['port'],
+    :dbname => mysql_service['name'], :username => mysql_service['user'], :password => mysql_service['password'])
+  client
+end
+
 def load_postgresql
   postgresql_service = load_service('postgresql')
   client = PGconn.open(postgresql_service['host'], postgresql_service['port'], :dbname => postgresql_service['name'], :user => postgresql_service['username'], :password => postgresql_service['password'])
   client
 end
 
-def load_mysql
-  mysql_service = load_service('mysql')
-  client = Mysql2::Client.new(:host => mysql_service['hostname'], :port => mysql_service['port'], :username => mysql_service['user'], :password => mysql_service['password'])
+def load_redis
+  redis_service = load_service('redis')
+  client = Redis.new(:host => redis_service['host'], :port => redis_service['port'], :user => redis_service['username'], :password => redis_service['password'])
+  client
+end
+
+def load_rabbitmq
+  rabbitmq_service = load_service('rabbitmq')
+  p rabbitmq_service
+  client = Bunny.new(rabbitmq_service['url'])
   client
 end
 

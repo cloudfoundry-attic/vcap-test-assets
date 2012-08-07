@@ -1,14 +1,18 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    bson (1.6.2)
     eventmachine (0.12.10)
-    json (1.4.6)
-    mongo (1.6.2)
-      bson (~> 1.6.2)
     mysql2 (0.3.11)
+    bson (1.6.4)
+    bson_ext (1.6.2)
+      bson (~> 1.6.2)
+    bunny (0.8.0)
+    json (1.4.6)
+    mongo (1.6.4)
+      bson (~> 1.6.4)
     pg (0.11.0)
     rack (1.2.2)
+    redis (3.0.1)
     sinatra (1.2.6)
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
@@ -20,9 +24,12 @@ PLATFORMS
 
 DEPENDENCIES
   eventmachine
+  bson_ext
+  bunny
   json
   mongo
   mysql2
   pg
+  redis
   sinatra
   yajl-ruby

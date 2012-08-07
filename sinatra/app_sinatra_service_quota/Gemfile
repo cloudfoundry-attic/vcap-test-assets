@@ -4,6 +4,11 @@ source "http://rubygems.org"
 gem 'sinatra'
 gem 'json'
 gem 'pg'
+gem 'mysql2'
+gem 'bson_ext'
+gem 'redis'
+gem 'bunny'
+gem 'mongo'
 gem "yajl-ruby"
 gem 'mysql2'
 gem 'eventmachine'

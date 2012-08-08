@@ -1,0 +1,7 @@
+source :rubygems
+
+gem "sinatra"
+
+gem "vcap_logging", :require => ['vcap/logging'], :git => 'git://github.com/cloudfoundry/common.git', :ref => 'e36886a1'
+# with native extensions
+gem 'eventmachine', :git => 'https://github.com/cloudfoundry/eventmachine.git', :branch => 'release-0.12.11-cf'

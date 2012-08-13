@@ -7,6 +7,7 @@ import org.cloudfoundry.runtime.env.AbstractServiceInfo;
 import org.cloudfoundry.runtime.env.CloudEnvironment;
 import org.cloudfoundry.runtime.env.MongoServiceInfo;
 import org.cloudfoundry.runtime.env.RedisServiceInfo;
+import org.cloudfoundry.runtime.env.RabbitServiceInfo;
 import org.cloudfoundry.runtime.service.messaging.RabbitServiceCreator;
 import org.hibernate.SessionFactory;
 import org.springframework.amqp.rabbit.connection.Connection;
@@ -43,7 +44,8 @@ public class ReferenceDataRepository {
     }
 
     public void write_to_rabbitmq(String key, String value) throws IOException {
-        ConnectionFactory rabbitConnectionFactory = new RabbitServiceCreator(environment()).createSingletonService().service;
+        RabbitServiceInfo rsi = environment().getServiceInfos(RabbitServiceInfo.class).get(0);
+        ConnectionFactory rabbitConnectionFactory = new RabbitServiceCreator().createSingletonService(rsi).service;
         Connection conn = rabbitConnectionFactory.createConnection();
         Channel channel = conn.createChannel(true);
         channel.exchangeDeclare(key, "direct");
@@ -56,7 +58,8 @@ public class ReferenceDataRepository {
     }
 
     public String read_from_rabbitmq(String key) throws IOException {
-        ConnectionFactory rabbitConnectionFactory = new RabbitServiceCreator(environment()).createSingletonService().service;
+        RabbitServiceInfo rsi = environment().getServiceInfos(RabbitServiceInfo.class).get(0);
+        ConnectionFactory rabbitConnectionFactory = new RabbitServiceCreator().createSingletonService(rsi).service;
         Connection conn = rabbitConnectionFactory.createConnection();
         Channel channel = conn.createChannel(true);
         channel.exchangeDeclare(key, "direct");

@@ -2,3 +2,4 @@ source :rubygems
 
 gem "sinatra"
 gem "rmagick"
+gem "mini_magick"

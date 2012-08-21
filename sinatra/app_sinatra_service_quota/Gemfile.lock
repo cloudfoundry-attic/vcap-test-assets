@@ -1,15 +1,21 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    eventmachine (0.12.10)
-    mysql2 (0.3.11)
+    aws-s3 (0.6.3)
+      builder
+      mime-types
+      xml-simple
     bson (1.6.4)
     bson_ext (1.6.2)
       bson (~> 1.6.2)
+    builder (3.0.0)
     bunny (0.8.0)
+    eventmachine (0.12.10)
     json (1.4.6)
+    mime-types (1.19)
     mongo (1.6.4)
       bson (~> 1.6.4)
+    mysql2 (0.3.11)
     pg (0.11.0)
     rack (1.2.2)
     redis (3.0.1)
@@ -17,15 +23,17 @@ GEM
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
     tilt (1.3)
+    xml-simple (1.1.1)
     yajl-ruby (1.0.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  eventmachine
+  aws-s3
   bson_ext
   bunny
+  eventmachine
   json
   mongo
   mysql2

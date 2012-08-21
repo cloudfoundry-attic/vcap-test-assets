@@ -7,10 +7,9 @@ require 'bunny'
 require 'mongo'
 require 'mysql2'
 require "yajl"
-require 'mysql2'
 require 'eventmachine'
 require 'time'
-require 'mongo'
+require 'aws/s3'
 
 get '/env' do
   ENV['VMC_SERVICES']
@@ -544,6 +543,113 @@ post '/service/rabbitmq/publish/:megabytes' do
   end
 end
 
+post '/service/vblob/:bucket' do
+  e1 = nil
+  begin
+    load_vblob
+    AWS::S3::Bucket.create(params[:bucket])
+  rescue => e
+    e1 = e
+  end
+
+  if e1
+    "#{e1}"
+  else
+    "ok"
+  end
+end
+
+delete '/service/vblob/:bucket' do
+  e1 = nil
+  begin
+    load_vblob
+    AWS::S3::Bucket.delete(params[:bucket])
+  rescue => e
+    e1 = e
+  end
+
+  if e1
+    "#{e1}"
+  else
+    "ok"
+  end
+end
+
+post '/service/vblob/:bucket/:object/:megabytes' do
+  e1 = nil
+  begin
+    load_vblob
+    data = prepare_data(1)
+    number = params[:megabytes].to_i
+    AWS::S3::S3Object.store("#{params[:object]}0", data, params[:bucket])
+    for i in 1..number-1
+      AWS::S3::S3Object.copy("#{params[:object]}0", "#{params[:object]}#{i}", params[:bucket])
+    end
+  rescue Exception => e
+    e1 = e
+    puts e.backtrace
+  end
+
+  if e1
+    "#{e1}"
+  else
+    "ok"
+  end
+end
+
+post '/service/vblob/obj_limit/:bucket/:object/:megabytes' do
+  e1 = nil
+  begin
+    load_vblob
+    number = params[:megabytes].to_i
+    AWS::S3::S3Object.store("#{params[:object]}0", '', params[:bucket])
+    for i in 1..number-1
+      AWS::S3::S3Object.copy("#{params[:object]}0", "#{params[:object]}#{i}", params[:bucket])
+    end
+  rescue => e
+    e1 = e
+  end
+
+  if e1
+    "#{e1}"
+  else
+    "ok"
+  end
+end
+
+delete '/service/vblob/:bucket/:object/:megabytes' do
+  e1 = nil
+  begin
+    load_vblob
+    number = params[:megabytes].to_i
+    for i in 0..number-1
+      AWS::S3::S3Object.delete("#{params[:object]}#{i}", params[:bucket])
+    end
+  rescue => e
+    e1 = e
+  end
+
+  if e1
+    "#{e1}"
+  else
+    "ok"
+  end
+end
+
+get '/service/vblob/list' do
+  load_vblob
+  AWS::S3::Service.buckets(:reload).inspect rescue "list failed: #{$!} at #{$@}"
+end
+
+get '/service/vblob/:bucket' do
+  load_vblob
+  AWS::S3::Bucket.find(params[:bucket]).inspect rescue "fetch bucket: #{params[:bucket]} failed: #{$!} at #{$@}"
+end
+
+get '/service/vblob/:bucket/size' do
+  load_vblob
+  AWS::S3::Bucket.find(params[:bucket]).size() rescue "fetch bucket: #{params[:bucket]} failed: #{$!} at #{$@}"
+end
 
 # helper methods
 helpers do
@@ -601,6 +707,16 @@ def load_mongodb
   conn = Mongo::Connection.new(mongodb_service['hostname'], mongodb_service['port'])
   client = conn[mongodb_service['db']]
   client
+end
+
+def load_vblob
+  vblob_service = load_service('blob')
+  AWS::S3::Base.establish_connection!(
+    :access_key_id      => vblob_service['username'],
+    :secret_access_key  => vblob_service['password'],
+    :port               => vblob_service['port'],
+    :server             => vblob_service['host']
+  ) unless vblob_service == nil
 end
 
 def load_service(service_name)

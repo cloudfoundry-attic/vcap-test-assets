@@ -13,3 +13,4 @@ gem "yajl-ruby"
 gem 'mysql2'
 gem 'eventmachine'
 gem 'mongo'
+gem 'aws-s3'

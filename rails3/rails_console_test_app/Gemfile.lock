@@ -31,6 +31,7 @@ GEM
       multi_json (~> 1.0)
     arel (2.2.3)
     builder (3.0.0)
+    cf-runtime (0.0.2)
     coffee-rails (3.1.1)
       coffee-script (>= 2.2.0)
       railties (~> 3.1.0)
@@ -108,6 +109,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  cf-runtime
   coffee-rails (~> 3.1.1)
   jquery-rails
   json

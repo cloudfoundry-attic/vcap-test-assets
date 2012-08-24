@@ -106,8 +106,7 @@ end
 
 def load_mysql
   client = Mysql2::Client.new(:host => '127.0.0.1', :username =>'testuser', :port => 3306, :password => 'testpw', :database => 'testdb')
-  result = client.query("SELECT table_name FROM information_schema.tables WHERE table_name = 'data_values'");
-  client.query("Create table IF NOT EXISTS data_values ( id varchar(20), data_value varchar(20)); ") if result.count != 1
+  client.query("Create table IF NOT EXISTS data_values ( id varchar(20), data_value varchar(20)); ")
   client
 end
 

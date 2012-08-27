@@ -23,8 +23,6 @@ gem "mysql2"
 
 gem "pg"
 
-gem "cf-runtime"
-
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

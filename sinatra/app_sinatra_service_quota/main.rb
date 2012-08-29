@@ -336,6 +336,7 @@ post '/service/mysql/clients/:clients' do
         client = load_mysql
         client.query("show tables")
         sleep 8
+        client.close
         clients_number += 1
       rescue => e
         e1 = e
@@ -362,6 +363,7 @@ post '/service/postgresql/clients/:clients' do
         client = load_postgresql
         client.query("select count(*) from pg_stat_activity")
         sleep 8
+        client.close
         clients_number += 1
       rescue => e
         e1 = e

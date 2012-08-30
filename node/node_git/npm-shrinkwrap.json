@@ -1,0 +1,10 @@
+{
+  "name": "node-git",
+  "version": "0.0.1",
+  "dependencies": {
+    "semver": {
+      "version": "1.0.9",
+      "from": "git://github.com/isaacs/node-semver.git#ef7cb88c00"
+    }
+  }
+}

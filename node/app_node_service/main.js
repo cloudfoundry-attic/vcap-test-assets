@@ -10,7 +10,7 @@ var nerve = require( './lib/nerve/lib/nerve' ),
 
 var msg_value="";
 
-var port = process.env.VMC_APP_PORT || 8080;
+var port = process.env.VCAP_APP_PORT || 8080;
 var getBody = function(req, callback){
     var body = '';
     req.on('data', function(chunk){
@@ -22,7 +22,7 @@ var getBody = function(req, callback){
 
 var app = [
   [get(/^\/env$/), function(req, res, name) {
-    var services =  eval('(' + process.env.VMC_SERVICES + ')');
+    var services =  eval('(' + process.env.VCAP_SERVICES + ')');
     res.respond('env: '+ sys.inspect(services));
   }],
   [get(/^\/$/), function(req, res, name) {
@@ -279,13 +279,15 @@ function mysql_services(){
 }
 
 function load_service(service_name){
-  var services =  eval('(' + process.env.VMC_SERVICES + ')');
+  var services =  eval('(' + process.env.VCAP_SERVICES + ')');
   var service = null;
-  services.forEach(function(s){
-    if(s.vendor.toLowerCase() === service_name.toLowerCase()){
-      service = s.options;
-    }
-  });
+  for (i in services) {
+    services[i].forEach(function(s) {
+      if(i.split('-')[0].toLowerCase() === service_name.toLowerCase()){
+        service = s.credentials;
+      }
+    });
+  }
   return service;
 }
 

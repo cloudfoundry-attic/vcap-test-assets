@@ -17,18 +17,20 @@ client = nil
 $:.unshift File.join(File.dirname(__FILE__),'lib','atmos')
 require 'atmos_client'
 
-svcs = ENV['VMC_SERVICES']
+svcs = ENV['VCAP_SERVICES']
 if svcs
   svcs = Yajl::Parser.parse(svcs)
-  svcs.each do |svc|
-    if svc["name"] =~ /atmos/
-      opts = svc["options"]
-      atmos[:host] = opts["host"]
-      atmos[:uid] = opts["token"]
-      atmos[:sid] = opts["subtenant_id"]
-      atmos[:key] = opts["shared_secret"]
-      atmos[:port] = opts["port"]
-      client = AtmosClient.new(atmos)
+  svcs.each do |k, v|
+    v.each do |svc|
+      if svc["name"] =~ /atmos/
+        opts = svc["credentials"]
+        atmos[:host] = opts["host"]
+        atmos[:uid] = opts["token"]
+        atmos[:sid] = opts["subtenant_id"]
+        atmos[:key] = opts["shared_secret"]
+        atmos[:port] = opts["port"]
+        client = AtmosClient.new(atmos)
+      end
     end
   end
 end

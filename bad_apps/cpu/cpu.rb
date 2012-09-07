@@ -4,8 +4,8 @@ require 'sinatra'
 BLOWUP_MEM = 512
 
 get '/' do
-  host = ENV['VMC_APP_HOST']
-  port = ENV['VMC_APP_PORT']
+  host = ENV['VCAP_APP_HOST']
+  port = ENV['VCAP_APP_PORT']
   msg = "<h1>Hello from CpuHog! via: #{host}:#{port} </h1>"
   msg += "<h2>Visit /evil to trigger bad behavior to create processes to peg the cpu!.</h2>"
   msg += "<h1><font weight=bold color=red>DO NOT DO THIS ON A NON-SECURE DEA!</font></h1>"

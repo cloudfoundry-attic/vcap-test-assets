@@ -5,7 +5,7 @@ class ServiceController < ApplicationController
   end
 
   def env
-    render :text => ENV['VMC_SERVICES']
+    render :text => ENV['VCAP_SERVICES']
   end
 
   def crash

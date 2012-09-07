@@ -7,8 +7,8 @@ KB = 1024
 MB = KB * 1024
 
 get '/' do
-  host = ENV['VMC_APP_HOST']
-  port = ENV['VMC_APP_PORT']
+  host = ENV['VCAP_APP_HOST']
+  port = ENV['VCAP_APP_PORT']
   msg = "<h1>Hello from DiskHog! via: #{host}:#{port} </h1>"
   msg += "<h2>Visit /largefile to trigger bad behavior</h2>"
 end

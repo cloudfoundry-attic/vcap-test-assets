@@ -36,18 +36,19 @@ end
 
 
 get '/services' do
-  app_instance = JSON.parse(ENV['VMC_APP_INSTANCE'])
-  services = JSON.parse(ENV['VMC_SERVICES'])
+  app_instance = JSON.parse(ENV['VCAP_APPLICATION'])
+  services = JSON.parse(ENV['VCAP_SERVICES'])
 
   valid_services = false
   service_list = []
-  services.each do |v|
-    s = {}
-    s['type'] = v['type']
-    s['vendor'] = v['vendor']
-    s['name'] = v['name']
-    service_list << s
-    valid_services = true
+  services.each do |k, v|
+    v.each do |i|
+      s = {}
+      s['vendor'] = k.split('-')[0]
+      s['name'] = i['name']
+      service_list << s
+      valid_services = true
+    end
   end
   response = "{\"status\":\"ok\", \"services\": #{service_list.to_json}}" if valid_services
   response = "{\"status\":\"fail\", \"services\": []}" if !valid_services

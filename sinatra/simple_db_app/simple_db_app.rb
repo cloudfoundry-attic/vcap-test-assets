@@ -59,8 +59,8 @@ helpers do
 end
 
 get '/' do
-  host = ENV['VMC_DEA_HOST']
-  port = ENV['VMC_DEA_PORT']
+  host = ENV['VCAP_DEA_HOST']
+  port = ENV['VCAP_DEA_PORT']
   "<h1>Hello from Simple DB app! via: #{host}:#{port}</h1>"
 end
 

@@ -5,7 +5,7 @@ require 'uri'
 
 class RackAutoConfigApp < Sinatra::Base
 get '/env' do
-  ENV['VMC_SERVICES']
+  ENV['VCAP_SERVICES']
 end
 
 get '/' do

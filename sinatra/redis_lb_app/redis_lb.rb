@@ -7,23 +7,26 @@ require 'redis'
 $stdout.sync = true
 
 def get_redis_client
-  redis_host = ENV['VMC_REDIS']
-  return unless redis_host
-  services = JSON.parse(ENV['VMC_SERVICES'])
+  services = JSON.parse(ENV['VCAP_SERVICES'])
 
-  redis_service = services.find {|service| service["vendor"].downcase == "redis"}
-  if redis_service
-    options = redis_service["options"]
-    Redis.new(:host => options["hostname"], :port => options["port"], :password => options["password"])
+  redis_service = nil
+  services.each do |k, v|
+    v.each do |s|
+      if k.split('-')[0].downcase == 'redis'
+        redis_service = s["credentials"]
+      end
+    end
   end
-rescue
+  if redis_service
+    Redis.new(:host => redis_service["hostname"], :port => redis_service["port"], :password => redis_service["password"])
+  end
 end
 
 get '/' do
   if get_redis_client
     "OK"
   else
-    "FAIL: #{ENV['VMC_SERVICES']}"
+    "FAIL: #{ENV['VCAP_SERVICES']}"
   end
 end
 
@@ -31,20 +34,20 @@ get '/healthcheck' do
   if get_redis_client
     "OK"
   else
-    "FAIL: #{ENV['VMC_SERVICES']}"
+    "FAIL: #{ENV['VCAP_SERVICES']}"
   end
 end
 
 
 get '/incr' do
   if redis = get_redis_client
-    app_instance = JSON.parse(ENV['VMC_APP_INSTANCE'])
+    app_instance = JSON.parse(ENV['VCAP_APPLICATION'])
     instance_key = "redis_lb_#{app_instance["instance_index"]}"
     total_operations = redis.incr('redis_lb_total_operations')
     redis.hincrby('redis_lb_hash', instance_key, 1)
     "OK: total_operations = #{total_operations}, last_update from #{instance_key} set: #{redis.hgetall('redis_lb_hash').to_json}"
   else
-    "FAIL: #{ENV['VMC_SERVICES']}"
+    "FAIL: #{ENV['VCAP_SERVICES']}"
   end
 end
 
@@ -52,7 +55,7 @@ get '/reset' do
   if reset_stats
     "OK"
   else
-    "FAIL: #{ENV['VMC_SERVICES']}"
+    "FAIL: #{ENV['VCAP_SERVICES']}"
   end
 end
 
@@ -60,7 +63,7 @@ get '/getstats' do
   if redis = get_redis_client
     redis.hgetall('redis_lb_hash').to_json
   else
-    "FAIL: #{ENV['VMC_SERVICES']}"
+    "FAIL: #{ENV['VCAP_SERVICES']}"
   end
 end
 

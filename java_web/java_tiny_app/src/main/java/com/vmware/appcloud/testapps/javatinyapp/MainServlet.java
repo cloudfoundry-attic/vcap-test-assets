@@ -24,8 +24,8 @@ public class MainServlet extends HttpServlet {
 		response.setStatus(200);
 		PrintWriter writer = response.getWriter();
 		writer.println("It just needed to be restarted!");
-		writer.println("My instance id: " + System.getenv("VMC_APP_ID"));
-		writer.println("My location: " + System.getenv("VMC_DEA_HOST") + ":" + System.getenv("VMC_DEA_PORT"));
+		writer.println("My instance id: " + System.getenv("VCAP_APP_ID"));
+		writer.println("My location: " + System.getenv("VCAP_DEA_HOST") + ":" + System.getenv("VCAP_DEA_PORT"));
 		writer.close();
 	}
 }

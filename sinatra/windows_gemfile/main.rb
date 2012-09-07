@@ -4,7 +4,7 @@ require 'mysql2'
 require 'pg'
 
 get '/env' do
-  ENV['VMC_SERVICES']
+  ENV['VCAP_SERVICES']
 end
 
 get '/rack/env' do
@@ -141,7 +141,14 @@ def load_postgresql
 end
 
 def load_service(service_name)
-  services = JSON.parse(ENV['VMC_SERVICES'])
-  service = services.find {|service| service["vendor"].downcase == service_name}
-  service = service["options"] if service
+  services = JSON.parse(ENV['VCAP_SERVICES'])
+  service = nil
+  services.each do |k, v|
+    v.each do |s|
+      if k.split('-')[0].downcase == service_name.downcase
+        service = s["credentials"]
+      end
+    end
+  end
+  service
 end

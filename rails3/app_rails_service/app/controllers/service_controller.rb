@@ -5,7 +5,7 @@ class ServiceController < ApplicationController
   end
 
   def env
-    render :text => ENV['VMC_SERVICES']
+    render :text => ENV['VCAP_SERVICES']
   end
 
   def crash
@@ -54,9 +54,16 @@ class ServiceController < ApplicationController
   private
 
   def load_service(service_name)
-    services = JSON.parse(ENV['VMC_SERVICES'])
-    service = services.find {|service| service["vendor"].downcase == service_name}
-    service = service["options"] if service
+    services = JSON.parse(ENV['VCAP_SERVICES'])
+    service = nil
+    services.each do |k, v|
+      v.each do |s|
+        if k.split('-')[0].downcase == service_name.downcase
+          service = s["credentials"]
+        end
+      end
+    end
+    service
   end
 
   def rabbit_srs_service

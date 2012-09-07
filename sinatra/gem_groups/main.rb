@@ -2,7 +2,7 @@ require 'sinatra'
 require 'json'
 
 get '/env' do
-  ENV['VMC_SERVICES']
+  ENV['VCAP_SERVICES']
 end
 
 get '/rack/env' do

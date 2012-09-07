@@ -18,8 +18,8 @@ def get_dalli_client
 end
 
 get '/' do
-  host = ENV['VMC_APP_HOST']
-  port = ENV['VMC_APP_PORT']
+  host = ENV['VCAP_APP_HOST']
+  port = ENV['VCAP_APP_PORT']
   "<h1>Hello from the Cloud! via: #{host}:#{port}</h1>"
 end
 

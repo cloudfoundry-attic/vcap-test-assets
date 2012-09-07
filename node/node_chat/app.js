@@ -120,7 +120,7 @@ setInterval(function () {
   }
 }, 1000);
 
-fu.listen(Number(process.env.VMC_APP_PORT || PORT), HOST);
+fu.listen(Number(process.env.VCAP_APP_PORT || PORT), HOST);
 
 fu.get("/", fu.staticHandler("index.html"));
 fu.get("/style.css", fu.staticHandler("style.css"));

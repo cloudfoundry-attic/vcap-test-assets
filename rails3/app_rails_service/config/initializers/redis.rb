@@ -1,9 +1,15 @@
-if ENV['VMC_SERVICES']
-  services = JSON.parse(ENV['VMC_SERVICES'])
+if ENV['VCAP_SERVICES']
+  services = JSON.parse(ENV['VCAP_SERVICES'])
   if services
-    redis_service = services.find {|service| service["vendor"].downcase == "redis"}
+    redis_service = nil
+    services.each do |k, v|
+      v.each do |s|
+        if k.split('-')[0].downcase == 'redis'
+          redis_service = s["credentials"]
+        end
+      end
+    end
     if redis_service
-      redis_service = redis_service["options"]
       $redis = Redis.new({:host => redis_service["hostname"], :port => redis_service["port"], :password => redis_service["password"]})
     end
   end

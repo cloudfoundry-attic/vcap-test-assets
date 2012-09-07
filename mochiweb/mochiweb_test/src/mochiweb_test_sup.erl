@@ -42,7 +42,7 @@ upgrade() ->
 %% @doc supervisor callback.
 init([]) ->
     Web = web_specs(mochiweb_test_web,
-      case os:getenv("VMC_APP_PORT") of
+      case os:getenv("VCAP_APP_PORT") of
         false     -> 9090;
         P         -> list_to_integer(P)
       end),

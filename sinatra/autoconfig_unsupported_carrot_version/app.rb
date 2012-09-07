@@ -4,7 +4,7 @@ require 'carrot'
 require 'uri'
 
 get '/env' do
-  ENV['VMC_SERVICES']
+  ENV['VCAP_SERVICES']
 end
 
 get '/' do

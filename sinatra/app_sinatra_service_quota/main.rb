@@ -583,6 +583,7 @@ post '/service/vblob/:bucket/:object/:megabytes' do
     load_vblob
     data = prepare_data(1)
     number = params[:megabytes].to_i
+    return "ok" if number == 0
     AWS::S3::S3Object.store("#{params[:object]}0", data, params[:bucket])
     for i in 1..number-1
       AWS::S3::S3Object.copy("#{params[:object]}0", "#{params[:object]}#{i}", params[:bucket])

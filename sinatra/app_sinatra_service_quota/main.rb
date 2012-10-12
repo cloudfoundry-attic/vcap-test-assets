@@ -412,30 +412,18 @@ end
 
 # max_clients of mongodb
 post '/service/mongodb/clients/:clients' do
-  e1 = nil
-  threads = []
-  Thread.abort_on_exception = true
-  clients_number = 0
-  params[:clients].to_i.times do
-    threads << Thread.new do
-      begin
-        client = load_mongodb
-        coll   = client['test']
-        coll.insert({'a' => 1})
-        sleep 10
-        clients_number += 1
-      rescue => e
-        if e != nil && e != ""
-          e1 = e
-        end
-      end
+  conns = []
+
+  begin
+    params[:clients].to_i.times do
+      client = load_mongodb
+      coll = client['test']
+      coll.insert({'a' => 1})
+      conns << client
     end
-  end
-  threads.each { |t| t.join }
-  if e1
-    "#{clients_number}-#{e1}"
-  else
-    "ok"
+    'ok'
+  rescue => e
+    "#{conns.size}-#{e}"
   end
 end
 

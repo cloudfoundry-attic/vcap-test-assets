@@ -1,0 +1,7 @@
+{
+  "name" : "node-dependencies08",
+  "version" : "0.1.0",
+  "dependencies" : {
+    "bcrypt" : "0.7.x"
+  }
+}

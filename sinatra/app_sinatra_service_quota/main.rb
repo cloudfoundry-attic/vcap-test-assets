@@ -155,7 +155,7 @@ end
 post '/service/mysql/tables/:table' do
   client = load_mysql
   begin
-    client.query("create table #{params[:table]} (value mediumtext)")
+    client.query("create table #{params[:table]} (value mediumtext) ENGINE=MYISAM")
     params[:table]
   rescue => e
     "#{e}"

@@ -385,6 +385,8 @@ post '/service/rabbitmq/clients/:clients' do
   clients_number = 0
   Thread.abort_on_exception = false
   params[:clients].to_i.times do
+    # Avoid all the threads enter the timeout code at the same time, for the load_rabbitmq and start may exceed 1s due to the GIL while running concurrently
+    sleep 0.1
     threads << Thread.new do
       begin
         client = nil
@@ -397,6 +399,8 @@ post '/service/rabbitmq/clients/:clients' do
         e.publish("Hello, everybody!", :key => 'test1')
         sleep 8
         clients_number += 1
+        # Thread join will not kill the connection, must stop connection explicitly
+        client.stop
       rescue Timeout::Error
         e1 = 'connection timeout'
       end

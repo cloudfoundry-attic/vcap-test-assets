@@ -565,16 +565,16 @@ delete '/service/vblob/:bucket' do
   end
 end
 
-post '/service/vblob/:bucket/:object/:megabytes' do
+post '/service/vblob/:bucket/:megabytes' do
   e1 = nil
   begin
     load_vblob
     data = prepare_data(1)
     number = params[:megabytes].to_i
     return "ok" if number == 0
-    AWS::S3::S3Object.store("#{params[:object]}0", data, params[:bucket])
+    AWS::S3::S3Object.store("testobject0", data, params[:bucket])
     for i in 1..number-1
-      AWS::S3::S3Object.copy("#{params[:object]}0", "#{params[:object]}#{i}", params[:bucket])
+      AWS::S3::S3Object.copy("testobject0", "testobject#{i}", params[:bucket])
     end
   rescue Exception => e
     e1 = e
@@ -588,14 +588,14 @@ post '/service/vblob/:bucket/:object/:megabytes' do
   end
 end
 
-post '/service/vblob/obj_limit/:bucket/:object/:megabytes' do
+post '/service/vblob/obj_limit/:bucket/:megabytes' do
   e1 = nil
   begin
     load_vblob
     number = params[:megabytes].to_i
-    AWS::S3::S3Object.store("#{params[:object]}0", '', params[:bucket])
+    AWS::S3::S3Object.store("testobject0", '', params[:bucket])
     for i in 1..number-1
-      AWS::S3::S3Object.copy("#{params[:object]}0", "#{params[:object]}#{i}", params[:bucket])
+      AWS::S3::S3Object.copy("testobject0", "testobject#{i}", params[:bucket])
     end
   rescue => e
     e1 = e
@@ -608,13 +608,13 @@ post '/service/vblob/obj_limit/:bucket/:object/:megabytes' do
   end
 end
 
-delete '/service/vblob/:bucket/:object/:megabytes' do
+delete '/service/vblob/:bucket/:megabytes' do
   e1 = nil
   begin
     load_vblob
     number = params[:megabytes].to_i
     for i in 0..number-1
-      AWS::S3::S3Object.delete("#{params[:object]}#{i}", params[:bucket])
+      AWS::S3::S3Object.delete("testobject#{i}", params[:bucket])
     end
   rescue => e
     e1 = e

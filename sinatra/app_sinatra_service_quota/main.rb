@@ -399,8 +399,6 @@ post '/service/rabbitmq/clients/:clients' do
         e.publish("Hello, everybody!", :key => 'test1')
         sleep 8
         clients_number += 1
-        # Thread join will not kill the connection, must stop connection explicitly
-        client.stop
       rescue Timeout::Error
         e1 = 'connection timeout'
       end

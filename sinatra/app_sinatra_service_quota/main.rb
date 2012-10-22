@@ -331,7 +331,6 @@ post '/service/mysql/clients/:clients' do
   clients_number = 0
   Thread.abort_on_exception = true
   params[:clients].to_i.times do
-    sleep 0.01
     threads << Thread.new do
       begin
         client = load_mysql
@@ -359,7 +358,6 @@ post '/service/postgresql/clients/:clients' do
   clients_number = 0
   Thread.abort_on_exception = true
   params[:clients].to_i.times do
-    sleep 0.01
     threads << Thread.new do
       begin
         client = load_postgresql
@@ -387,7 +385,6 @@ post '/service/rabbitmq/clients/:clients' do
   clients_number = 0
   Thread.abort_on_exception = false
   params[:clients].to_i.times do
-    sleep 0.01
     threads << Thread.new do
       begin
         client = nil
@@ -437,7 +434,6 @@ post '/service/redis/clients/:clients' do
   Thread.abort_on_exception = true
   clients_number = 0
   params[:clients].to_i.times do
-    sleep 0.01
     threads << Thread.new do
       begin
         client = load_redis

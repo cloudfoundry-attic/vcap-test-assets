@@ -385,8 +385,6 @@ post '/service/rabbitmq/clients/:clients' do
   clients_number = 0
   Thread.abort_on_exception = false
   params[:clients].to_i.times do
-    # Avoid all the threads enter the timeout code at the same time, for the load_rabbitmq and start may exceed 1s due to the GIL while running concurrently
-    sleep 0.1
     threads << Thread.new do
       begin
         client = nil

@@ -1,0 +1,8 @@
+Code-Review+2: Pin Xie <pxie@vmware.com>
+Verified+1: CI Master <cf-ci@rbcon.com>
+Code-Review+1: Andy Zhang <andyzhang@rbcon.com>
+Submitted-by: Michael Zhang <zhangcheng@rbcon.com>
+Submitted-at: Mon, 22 Oct 2012 05:39:42 +0000
+Reviewed-on: http://reviews.cloudfoundry.org/10653
+Project: vcap-test-assets
+Branch: refs/heads/master

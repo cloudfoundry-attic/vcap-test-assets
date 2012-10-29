@@ -387,7 +387,7 @@ post '/service/rabbitmq/clients/:clients' do
   clients_number = 0
   Thread.abort_on_exception = false
   params[:clients].to_i.times do
-    sleep 0.01
+    sleep 0.02
     threads << Thread.new do
       begin
         client = nil

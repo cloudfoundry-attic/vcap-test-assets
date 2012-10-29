@@ -40,14 +40,20 @@ end
 
 
 get '/incr' do
-  if redis = get_redis_client
-    app_instance = JSON.parse(ENV['VCAP_APPLICATION'])
-    instance_key = "redis_lb_#{app_instance["instance_index"]}"
-    total_operations = redis.incr('redis_lb_total_operations')
-    redis.hincrby('redis_lb_hash', instance_key, 1)
-    "OK: total_operations = #{total_operations}, last_update from #{instance_key} set: #{redis.hgetall('redis_lb_hash').to_json}"
-  else
-    "FAIL: #{ENV['VCAP_SERVICES']}"
+  begin
+    if redis = get_redis_client
+      app_instance = JSON.parse(ENV['VCAP_APPLICATION'])
+      instance_key = "redis_lb_#{app_instance["instance_index"]}"
+      total_operations = redis.incr('redis_lb_total_operations')
+      redis.hincrby('redis_lb_hash', instance_key, 1)
+      "OK: total_operations = #{total_operations}, last_update from #{instance_key} set: #{redis.hgetall('redis_lb_hash').to_json}"
+    else
+      "FAIL: #{ENV['VCAP_SERVICES']}"
+    end
+  rescue => e
+    "#{e}"
+  ensure
+    redis.quit
   end
 end
 

@@ -29,6 +29,10 @@ GEM
       activesupport (= 3.0.6)
     activesupport (3.0.6)
     arel (2.0.9)
+    aws-s3 (0.6.3)
+      builder
+      mime-types
+      xml-simple
     bson (1.2.4)
     builder (2.1.2)
     carrot (1.2.0)
@@ -84,11 +88,13 @@ GEM
     treetop (1.4.9)
       polyglot (>= 0.3.1)
     tzinfo (0.3.26)
+    xml-simple (1.1.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  aws-s3
   carrot
   json
   mongo

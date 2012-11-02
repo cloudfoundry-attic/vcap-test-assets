@@ -274,12 +274,12 @@ end
 # populate data into postgresql table
 post '/service/postgresql/tables/:name/:megabytes' do
   client = load_postgresql
+  i = 0
   begin
     content = prepare_data(1)
     client = load_postgresql
     sleep 1
     size = params[:megabytes].to_i
-    i = 0
     while i < size do
       client.query("insert into #{params[:name]} (value) values('#{content}');")
       sleep 1 if i % 10 == 0
@@ -287,7 +287,7 @@ post '/service/postgresql/tables/:name/:megabytes' do
     end
     'ok'
   rescue => e
-    "#{e}"
+    "#{i}-#{e}"
   ensure
     client.close if client
   end

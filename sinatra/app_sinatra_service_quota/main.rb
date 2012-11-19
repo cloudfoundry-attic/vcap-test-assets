@@ -120,9 +120,11 @@ post '/service/mongodb/collection' do
       puts col.count()
     end
     return last_error['err']
-    #if reach quota_files limit, should be "db disk space quota exceeded db"
   rescue Exception => e
     puts e.message
+    # proxy will drop the connection if 'Quota Exceed', the error message
+    # contains keyword 'Connection reset by peer'
+    return e.message
   end
 end
 
@@ -141,15 +143,23 @@ end
 delete '/service/mongodb/collection' do
   client = load_mongodb
   begin
-    col = client[params[:colname]]
-    params[:size].to_i.times do |i|
-      col.remove({"name"=>"mongo#{i}"})
-    end
+    client.drop_collection(params[:colname])
     client.close
   rescue Exception => e
     puts e.message
   end
   "DELETE OK"
+end
+
+post "/service/mongodb/maintain" do
+  client = load_mongodb
+  begin
+    client.command({:repairDatabase => 1})
+    client.close
+  rescue Exception => e
+    puts e.message
+  end
+  "REPAIR OK"
 end
 
 post '/service/mysql/tables/:table' do

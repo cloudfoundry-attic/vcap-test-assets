@@ -537,6 +537,31 @@ post '/service/rabbitmq/publish/:megabytes' do
   end
 end
 
+# publish to rabbit service to test the bandwidth rate
+post '/service/rabbitmq/bandwidth/:megabytes' do
+  e1 = nil
+  number = params[:megabytes].to_f
+  begin
+    client = load_rabbitmq
+    client.start
+    q = client.queue("test1")
+    e = client.exchange("")
+    data = prepare_data(number)
+    start = Time.now
+    ret = e.publish(data, :key => 'test1')
+    client.stop
+    cost = (Time.now - start).to_i
+  rescue => e
+    e1 = e
+  end
+
+  if e1
+    "#{e1}"
+  else
+    "ok-#{cost}"
+  end
+end
+
 post '/service/vblob/:bucket' do
   e1 = nil
   begin
@@ -667,7 +692,7 @@ helpers do
   end
 
   def prepare_data(size)
-    b = size * 1024 * 1024
+    b = (size * 1024 * 1024).to_i
     c = [('a'..'z'),('A'..'Z')].map{|i| Array(i)}.flatten
     (0..b).map{ c[rand(c.size)] }.join
   end

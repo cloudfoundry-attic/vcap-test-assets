@@ -5,13 +5,7 @@ get '/env' do
 end
 
 get '/' do
-   if RUBY_VERSION =~ /\A1.8/
-     "running version 1.8"
-   elsif RUBY_VERSION =~ /\A1.9/
-     "running version 1.9"
-   else
-     "unexpected ruby version #{RUBY_VERSION}"
-   end
+    "running version #{RUBY_VERSION}"
 end
 
 get '/crash' do

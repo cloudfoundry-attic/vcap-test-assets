@@ -6,6 +6,7 @@ require 'mysql2'
 require 'carrot'
 require 'uri'
 require 'pg'
+require 'aws/s3'
 
 class RackAutoConfigApp < Sinatra::Base
 get '/env' do
@@ -101,6 +102,20 @@ get '/service/rabbitmq/:key' do
   read_from_rabbit(params[:key], client)
 end
 
+post '/service/blob/:object' do
+  load_blob
+  begin
+    AWS::S3::Bucket.create("datavalues")
+  rescue
+  end
+  AWS::S3::S3Object.store(params[:object], request.body, "datavalues")
+end
+
+get '/service/blob/:object' do
+  load_blob
+  AWS::S3::S3Object.value(params[:object], "datavalues")
+end
+
 def load_redis
   Redis.new({:host => '127.0.0.1', :port => 6379, :password => 'testpw'})
 end
@@ -122,6 +137,13 @@ def load_postgresql
   client = PGconn.open('127.0.0.1', '8675', :dbname => 'testdb', :user => 'testuser', :password => 'testpw')
   client.query("create table data_values (id varchar(20), data_value varchar(20));") if client.query("select * from information_schema.tables where table_name = 'data_values';").first.nil?
   client
+end
+
+def load_blob
+  AWS::S3::Base.establish_connection!(
+    :access_key_id      => "myid",
+    :secret_access_key  => "mypwd"
+  )
 end
 
 def rabbit_service

@@ -30,6 +30,12 @@ class ServiceController < ApplicationController
       elsif params[:service] == 'rabbitmq'
         client = rabbit_service
         value = write_to_rabbit(params[:key], value, client)
+      elsif params[:service] == 'blob'
+        begin
+          AWS::S3::Bucket.create("datavalues")
+        rescue
+        end
+        AWS::S3::S3Object.store(params[:key], value, "datavalues")
       end
     else
       if params[:service] == 'redis'
@@ -46,6 +52,8 @@ class ServiceController < ApplicationController
       elsif params[:service] == 'rabbitmq'
         client = rabbit_service
         value = read_from_rabbit params[:key], client
+      elsif params[:service] == 'blob'
+        value = AWS::S3::S3Object.value(params[:key], "datavalues")
       end
     end
      render :text => value

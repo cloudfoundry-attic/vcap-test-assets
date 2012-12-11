@@ -123,8 +123,15 @@ post '/service/mongodb/collection' do
   rescue Exception => e
     puts e.message
     # proxy will drop the connection if 'Quota Exceed', the error message
-    # contains keyword 'Connection reset by peer'
-    return e.message
+    # contains keyword 'Broken pipe' or 'ConnectionFailure' or
+    # 'Connection reset by peer'
+    if e.message.include?("Broken pipe") or
+       e.message.include?("ConnectionFailure") or
+       e.message.include?("Connection reset by peer")
+        return "Connection Blocked"
+    else
+        return e.message
+    end
   end
 end
 

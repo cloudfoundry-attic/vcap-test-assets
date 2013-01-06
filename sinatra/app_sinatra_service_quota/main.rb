@@ -450,25 +450,20 @@ end
 # max_clients of redis
 post '/service/redis/clients/:clients' do
   e1 = nil
-  threads = []
-  Thread.abort_on_exception = true
+  redis_clients = []
   clients_number = 0
-  params[:clients].to_i.times do
-    sleep 0.01
-    threads << Thread.new do
-      begin
-        client = load_redis
-        client.set('abc', 'test')
-        sleep 10
-        clients_number += 1
-      rescue => e
-        if e != nil && e != ""
-          e1 = e
-        end
+  params[:clients].to_i.times { redis_clients << load_redis }
+  redis_clients.each do |client|
+    begin
+      client.set('abc', 'test')
+      clients_number += 1
+    rescue => e
+      if e != nil && e != ""
+        e1 = e
+        break
       end
     end
   end
-  threads.each { |t| t.join }
   if e1
     "#{clients_number}-#{e1}"
   else

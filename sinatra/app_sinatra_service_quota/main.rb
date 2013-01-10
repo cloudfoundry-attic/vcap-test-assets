@@ -289,22 +289,20 @@ get '/service/postgresql/database/size' do
 end
 
 # populate data into postgresql table
-post '/service/postgresql/tables/:name/:megabytes' do
+post '/service/postgresql/tables/:name/:megabytes/:chunk_size' do
   client = load_postgresql
-  i = 0
+  loaded_size = 0
   begin
-    content = prepare_data(1)
-    client = load_postgresql
-    sleep 1
     size = params[:megabytes].to_i
-    while i < size do
+    chunk_size = [params[:chunk_size].to_i, size].min
+    content = prepare_data(chunk_size)
+    while loaded_size < size do
       client.query("insert into #{params[:name]} (value) values('#{content}');")
-      sleep 1 if i % 10 == 0
-      i += 1
+      loaded_size += chunk_size
     end
     'ok'
   rescue => e
-    "#{i}-#{e}"
+    "#{loaded_size}-#{e}"
   ensure
     client.close if client
   end
@@ -323,19 +321,20 @@ get '/service/mysql/database/size' do
 end
 
 # populate data into mysql table
-post '/service/mysql/tables/:name/:megabytes' do
+post '/service/mysql/tables/:name/:megabytes/:chunk_size' do
   client = load_mysql
+  loaded_size = 0
   begin
     size = params[:megabytes].to_i
-    content = prepare_data(1)
-    i = 0
-    while i < size do
+    chunk_size = [params[:chunk_size].to_i, size].min
+    content = prepare_data(chunk_size)
+    while loaded_size < size do
       client.query("insert into #{params[:name]} (value) values('#{content}');")
-      i += 1
+      loaded_size += chunk_size
     end
     'ok'
   rescue => e
-    "#{e}"
+    "#{loaded_size}-#{e}"
   ensure
     client.close if client
   end

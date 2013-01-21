@@ -118,6 +118,13 @@ post '/service/postgresql/:key' do
 end
 
 get '/service/postgresql/:key' do
+  client_fake = load_postgresql(:type => 'fake')
+  client_nil = load_postgresql(:type => 'nil')
+  if client_fake || client_nil
+    client_fake.close if client_fake
+    client_nil.close if client_nil
+    return nil
+  end
   client = load_postgresql
   value = client.query("select data_value from  data_values where id = '#{params[:key]}'").first['data_value']
   client.close
@@ -234,10 +241,14 @@ def load_mongo
   coll = db['data_values'] if db.authenticate(mongodb_service['username'], mongodb_service['password'])
 end
 
-def load_postgresql
+def load_postgresql(opts={})
+  type = opts[:type] || "normal"
   postgresql_service = load_service('postgresql')
+  # postgresql supports HBA authentication, must validate the HBA works
+  postgresql_service['password'] = "fake#{postgresql_service['password']}" if type == "fake"
+  postgresql_service['password'] = nil if type == "nil"
   client = PGconn.open(postgresql_service['host'], postgresql_service['port'], :dbname => postgresql_service['name'], :user => postgresql_service['username'], :password => postgresql_service['password'])
-  client.query("create table data_values (id varchar(20), data_value varchar(20));") if client.query("select * from pg_catalog.pg_class where relname = 'data_values';").num_tuples() < 1
+  client.query("create table data_values (id varchar(20), data_value varchar(20));") if client.query("select * from pg_catalog.pg_class where relname = 'data_values';").num_tuples() < 1 if type == "normal"
   client
 end
 

@@ -2,6 +2,7 @@ require 'sinatra'
 require 'redis'
 require 'json'
 require 'uri'
+require 'cfautoconfig'
 
 class RackAutoConfigApp < Sinatra::Base
 get '/env' do

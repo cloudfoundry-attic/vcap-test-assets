@@ -1,6 +1,9 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    cf-autoconfig (0.1.0)
+      cf-runtime (= 0.1.1)
+    cf-runtime (0.1.1)
     daemons (1.1.8)
     eventmachine (0.12.10)
     json_pure (1.6.3)
@@ -22,6 +25,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  cf-autoconfig
   json_pure
   redis
   sinatra

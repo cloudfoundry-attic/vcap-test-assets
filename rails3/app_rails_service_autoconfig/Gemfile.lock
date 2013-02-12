@@ -36,6 +36,9 @@ GEM
     bson (1.2.4)
     builder (2.1.2)
     carrot (1.2.0)
+    cf-autoconfig (0.1.0)
+      cf-runtime (= 0.1.1)
+    cf-runtime (0.1.1)
     daemons (1.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
@@ -96,6 +99,7 @@ PLATFORMS
 DEPENDENCIES
   aws-s3
   carrot
+  cf-autoconfig
   json
   mongo
   mongo_mapper

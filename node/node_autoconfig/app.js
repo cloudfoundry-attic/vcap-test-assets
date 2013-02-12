@@ -1,3 +1,5 @@
+require("cf-autoconfig");
+
 var port = 3000;
 
 var serviceConfig = {

@@ -8,3 +8,4 @@ gem 'sinatra'
 gem 'json_pure'
 gem 'pg'
 gem 'amqp'
+gem "cf-autoconfig"

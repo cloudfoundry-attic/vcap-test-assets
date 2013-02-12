@@ -2,6 +2,7 @@ require 'sinatra'
 require 'json'
 require 'carrot'
 require 'uri'
+require "cfautoconfig"
 
 get '/env' do
   ENV['VCAP_SERVICES']

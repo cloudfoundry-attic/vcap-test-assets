@@ -7,6 +7,7 @@ require 'carrot'
 require 'uri'
 require 'pg'
 require 'aws/s3'
+require 'cfautoconfig'
 
 get '/env' do
   ENV['VCAP_SERVICES']

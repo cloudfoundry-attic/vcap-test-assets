@@ -3,5 +3,9 @@
   "version" : "0.1.0",
   "dependencies" : {
     "bcrypt" : "0.7.x"
+  },
+  "engines": {
+    "node": "0.8.x",
+    "npm": ">= 1.1.2"
   }
 }

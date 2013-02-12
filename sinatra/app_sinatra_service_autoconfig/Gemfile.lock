@@ -8,6 +8,9 @@ GEM
     bson (1.2.4)
     builder (3.1.4)
     carrot (1.2.0)
+    cf-autoconfig (0.1.0)
+      cf-runtime (= 0.1.1)
+    cf-runtime (0.1.1)
     json (1.4.6)
     mime-types (1.19)
     mongo (1.2.4)
@@ -28,6 +31,7 @@ PLATFORMS
 DEPENDENCIES
   aws-s3
   carrot
+  cf-autoconfig
   json
   mongo
   mysql2

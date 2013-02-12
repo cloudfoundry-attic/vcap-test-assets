@@ -11,8 +11,10 @@ require 'eventmachine'
 require 'time'
 require 'aws/s3'
 
+$stdout.sync = true
+
 get '/env' do
-  ENV['VCAP_SERVICES']
+  ENV["VCAP_SERVICES"]
 end
 
 get '/' do
@@ -712,7 +714,7 @@ end
 def load_mysql
   mysql_service = load_service('mysql')
   client = Mysql2::Client.new(:host => mysql_service['hostname'], :port => mysql_service['port'],
-    :dbname => mysql_service['name'], :username => mysql_service['user'], :password => mysql_service['password'])
+    :database => mysql_service['name'], :username => mysql_service['user'], :password => mysql_service['password'])
   client
 end
 
@@ -739,6 +741,7 @@ def load_mongodb
   mongodb_service = load_service('mongodb')
   conn = Mongo::Connection.new(mongodb_service['hostname'], mongodb_service['port'])
   client = conn[mongodb_service['db']]
+  coll = client['data_values'] if client.authenticate(mongodb_service['username'], mongodb_service['password'])
   client
 end
 

@@ -10,6 +10,9 @@ GEM
       amq-protocol (~> 0.8.4)
       eventmachine
     bson (1.5.1)
+    cf-autoconfig (0.1.0)
+      cf-runtime (= 0.1.1)
+    cf-runtime (0.1.1)
     eventmachine (0.12.10)
     json_pure (1.6.2)
     mongo (1.1.5)
@@ -31,6 +34,7 @@ PLATFORMS
 
 DEPENDENCIES
   amqp
+  cf-autoconfig
   json_pure
   mongo
   mysql2

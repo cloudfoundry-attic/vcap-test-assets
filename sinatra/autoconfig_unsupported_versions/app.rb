@@ -5,6 +5,7 @@ require 'mongo'
 require 'mysql2'
 require 'uri'
 require 'pg'
+require 'cfautoconfig'
 
 get '/env' do
   ENV['VCAP_SERVICES']

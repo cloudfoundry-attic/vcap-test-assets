@@ -2,6 +2,7 @@
 // which depends on node-gyp
 
 var bcrypt = require("bcrypt");
+var port = process.env.VCAP_APP_PORT || 3000;
 
 require("http").createServer(function(req, res) {
   var salt = bcrypt.genSaltSync(10);
@@ -10,4 +11,4 @@ require("http").createServer(function(req, res) {
     res.end("hello from node-gyp");
   else
     res.end("");
-}).listen(3000);
+}).listen(port);

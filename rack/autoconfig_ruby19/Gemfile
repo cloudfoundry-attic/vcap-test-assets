@@ -5,3 +5,4 @@ gem 'sinatra'
 gem 'json_pure'
 gem 'redis'
 gem 'thin'
+gem "cf-autoconfig"

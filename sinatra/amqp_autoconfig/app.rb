@@ -2,6 +2,7 @@ require 'sinatra'
 require 'json/pure'
 require 'uri'
 require 'amqp'
+require 'cfautoconfig'
 
 get '/env' do
   ENV['VCAP_SERVICES']

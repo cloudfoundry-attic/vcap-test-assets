@@ -1,0 +1,4 @@
+Todolist app from Play tutorial
+=====================================
+
+Demonstrates disabling Cloud Foundry auto-reconfiguration by including the cloudfoundry-runtime jar as a dependency.

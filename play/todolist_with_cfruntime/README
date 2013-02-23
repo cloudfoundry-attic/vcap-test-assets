@@ -1,3 +1,0 @@
-Todolist app from Play 2.0 Java Tutorial
-
-Demonstrates disabling Cloud Foundry auto-reconfiguration by including the cloudfoundry-runtime jar as a dependency.

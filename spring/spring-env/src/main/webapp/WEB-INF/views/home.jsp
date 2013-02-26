@@ -45,10 +45,13 @@
 					<li>
 						${source.name}
 						<dl>
-							<c:forEach items="${source.propertyNames}" var="name">
+							<!-- This will throw an Exception if PropertySource is not of type EnumerableProperty Source -->
+							<c:catch var ="catchException">
+							  <c:forEach items="${source.propertyNames}" var="name">
 								<dt>${name}</dt>
 								<dd><spring:eval expression="source.getProperty(name)" /></dd>
-							</c:forEach>
+							  </c:forEach>
+							</c:catch>
 						</dl>
 					</li>
 				</c:forEach>

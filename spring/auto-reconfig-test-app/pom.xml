@@ -10,14 +10,14 @@
 	<properties>
 		<java.version>1.6</java.version>
 		<cloudfoundry.runtime.version>0.8.2</cloudfoundry.runtime.version>
-		<org.springframework-version>3.1.0.M2</org.springframework-version>
+		<org.springframework-version>3.1.0.RELEASE</org.springframework-version>
 		<org.springframework.roo-version>1.0.2.RELEASE</org.springframework.roo-version>
 		<org.aspectj-version>1.6.9</org.aspectj-version>
 		<org.slf4j-version>1.6.1</org.slf4j-version>
 		<rabbitmq.version>2.5.1</rabbitmq.version>
 		<spring.amqp.version>1.0.0.RELEASE</spring.amqp.version>
-		<spring-data-mongo.version>1.0.0.M4</spring-data-mongo.version>
-		<spring-data-redis.version>1.0.0.M4</spring-data-redis.version>
+		<spring-data-mongo.version>1.0.4.RELEASE</spring-data-mongo.version>
+		<spring-data-redis.version>1.0.3.RELEASE</spring-data-redis.version>
 	</properties>
 	<dependencies>
 		<!-- Spring -->

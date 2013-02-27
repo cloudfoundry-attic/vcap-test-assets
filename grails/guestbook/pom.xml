@@ -7,15 +7,15 @@
   <artifactId>guestbook</artifactId>
   <packaging>war</packaging>
   <version>0.1</version>
-  
+
   <name>A custom grails project</name>
   <description>A custom grails project</description>
   <url>http://www.myorganization.org</url>
-  
+
   <properties>
     <grails.version>1.3.7</grails.version>
   </properties>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.grails</groupId>
@@ -52,7 +52,7 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
+
     <dependency>
       <groupId>org.grails</groupId>
       <artifactId>grails-crud</artifactId>
@@ -92,7 +92,7 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
+
     <dependency>
       <groupId>org.grails</groupId>
       <artifactId>grails-gorm</artifactId>
@@ -132,26 +132,26 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
+
     <dependency>
       <groupId>org.grails</groupId>
       <artifactId>grails-test</artifactId>
       <version>${grails.version}</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
       <version>1.1.2</version>
     </dependency>
-    
+
     <dependency>
       <groupId>taglibs</groupId>
       <artifactId>standard</artifactId>
       <version>1.1.2</version>
     </dependency>
-    
+
     <!-- Grails defaults to Ehache for the second-level Hibernate cache. -->
     <dependency>
       <groupId>org.hibernate</groupId>
@@ -163,7 +163,7 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
           </exclusion>
-          
+
           <!-- We are pulling in ehcache-core below -->
           <exclusion>
             <groupId>net.sf.ehcache</groupId>
@@ -171,7 +171,7 @@
           </exclusion>
         </exclusions>
     </dependency>
-        
+
     <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache-core</artifactId>
@@ -183,14 +183,14 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
+
     <!-- For ease of development and testing, we include the HSQLDB database. -->
     <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <version>1.8.0.10</version>
     </dependency>
-    
+
     <!-- Use Log4J for logging. This artifact also pulls in the Log4J JAR. -->
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -204,40 +204,40 @@
       <version>1.5.8</version>
       <scope>runtime</scope>
     </dependency>
-    
+
     <!-- Needed in the case of AOP usage -->
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjweaver</artifactId>
       <version>1.6.8</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjrt</artifactId>
       <version>1.6.8</version>
     </dependency>
-    
+
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.3</version>
     </dependency>
-    
+
     <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
       <version>3.2.1</version>
     </dependency>
-    
+
     <dependency>
       <groupId>commons-pool</groupId>
       <artifactId>commons-pool</artifactId>
       <version>1.5.3</version>
     </dependency>
-    
+
   </dependencies>
-  
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -248,7 +248,7 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-  
+
   <repositories>
 	  <!-- Required to get hold of javassist:javassist -->
     <repository>
@@ -257,32 +257,46 @@
       <url>http://repository.jboss.com/maven2/</url>
     </repository>
   </repositories>
-  
+
   <build>
     <pluginManagement />
-    
+
     <plugins>
-      <plugin>
-        <groupId>org.grails</groupId>
-        <artifactId>grails-maven-plugin</artifactId>
-        <version>${grails.version}</version>
-        <extensions>true</extensions>
-        <executions>
-          <execution>
-            <goals>
-              <goal>init</goal>
-              <goal>maven-clean</goal>
-              <goal>validate</goal>
-              <goal>config-directories</goal>
-              <goal>maven-compile</goal>
-              <goal>maven-test</goal>
-              <goal>maven-war</goal>
-              <goal>maven-functional-test</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      
+		<plugin>
+			<groupId>org.grails</groupId>
+			<artifactId>grails-maven-plugin</artifactId>
+			<version>${grails.version}</version>
+			<extensions>true</extensions>
+			<executions>
+				<execution>
+					<goals>
+						<goal>init</goal>
+						<goal>maven-clean</goal>
+						<goal>validate</goal>
+						<goal>config-directories</goal>
+						<goal>maven-compile</goal>
+						<goal>maven-test</goal>
+						<goal>maven-war</goal>
+						<goal>maven-functional-test</goal>
+					</goals>
+				</execution>
+			</executions>
+			<dependencies>
+				<dependency>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-ehcache</artifactId>
+					<version>3.3.1.GA</version>
+					<exclusions>
+						<exclusion>
+							<groupId>org.slf4j</groupId>
+							<artifactId>slf4j-api</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+			</dependencies>
+		</plugin>
+
+
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -292,7 +306,7 @@
       </plugin>
     </plugins>
   </build>
-  
+
   <profiles>
     <profile>
       <id>tools</id>

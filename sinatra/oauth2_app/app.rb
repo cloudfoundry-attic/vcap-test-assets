@@ -3,7 +3,7 @@ require 'base64'
 require 'yajl'
 require 'omniauth-uaa-oauth2'
 require 'restclient'
-  
+
 enable :sessions
 
 config = {}
@@ -16,7 +16,8 @@ SERVICE_LABEL = 'oauth2-1.0'.to_sym
 services = JSON.parse(ENV['VCAP_SERVICES']||"{}", :symbolize_keys=>true)
 if services[SERVICE_LABEL] && services[SERVICE_LABEL].length>0
   config.merge!(services[SERVICE_LABEL][0][:credentials])
-  config[:cloud_controller] = config[:auth_server_url].sub(/\/\/[^.]*\./,"//api.") if config[:auth_server_url]
+  prefix = ENV["PORT"] ? 'ccng' : 'api'
+  config[:cloud_controller] = config[:auth_server_url].sub(/\/\/[^.]*\./,"//#{prefix}.") if config[:auth_server_url]
 end
 
 puts "Config: #{config.inspect}"
@@ -65,14 +66,14 @@ get '/' do
 </html>
   HTML
 end
-  
+
 get '/apps' do
   token = session[:auth][:credentials][:token]
   apps = JSON.parse(RestClient.get("#{config[:cloud_controller]}/apps", :authorization=>"#{token}"), :symbolize_keys=>true)
   tree = ""
   apps.each do |app|
     body = ""
-    app.each do |k,v| 
+    app.each do |k,v|
       body << "<li>#{k}: #{v}</li>"
     end
     tree << "<li>#{app[:name]}<ul>#{body}</ul></li>"

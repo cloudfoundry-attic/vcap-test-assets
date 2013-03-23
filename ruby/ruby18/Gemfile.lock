@@ -1,0 +1,65 @@
+GIT
+  remote: git://github.com/cloudfoundry/cf.git
+  revision: 9e802c091d87ff08121d8da1cb309ff0e9681ef1
+  ref: 9e802c
+  specs:
+    cf (0.6.0.rc4)
+      cfoundry (>= 0.6.0.rc4, < 0.7)
+      clouseau (~> 0.0)
+      interact (~> 0.5)
+      json_pure (~> 1.6)
+      manifests-cf-plugin (>= 0.7.0.rc2, < 0.8)
+      mothership (>= 0.5.1, < 1.0)
+      multi_json (~> 1.3)
+      tunnel-cf-plugin (>= 0.3.0.rc2, < 0.4)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.3.3)
+    caldecott-client (0.0.2)
+      multi_json (~> 1.3)
+    cf-uaa-lib (1.3.10)
+      multi_json
+    cfoundry (0.6.0.rc4)
+      cf-uaa-lib (~> 1.3.10)
+      multi_json (~> 1.3)
+      multipart-post (~> 1.1)
+      rubyzip (~> 0.9)
+    clouseau (0.0.2)
+      rubyzip (~> 0.9.9)
+    ffi (1.3.1)
+    interact (0.5.2)
+    json_pure (1.7.7)
+    manifests-cf-plugin (0.7.0.rc2)
+      cfoundry (>= 0.6.0.rc2, < 0.7)
+    mime-types (1.21)
+    mothership (0.5.1)
+    multi_json (1.7.2)
+    multipart-post (1.2.0)
+    rack (1.5.2)
+    rack-protection (1.5.0)
+      rack
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
+    rubyzip (0.9.9)
+    sinatra (1.4.2)
+      rack (~> 1.5, >= 1.5.2)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
+    tilt (1.3.6)
+    tunnel-cf-plugin (0.3.0.rc2)
+      addressable (~> 2.2)
+      caldecott-client (~> 0.0.2)
+      cfoundry (>= 0.6.0.rc2, < 0.7)
+      rest-client (~> 1.6)
+      uuidtools (~> 2.1)
+    uuidtools (2.1.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  cf!
+  ffi
+  sinatra

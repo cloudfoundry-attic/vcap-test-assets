@@ -1,5 +1,8 @@
 require 'rubygems'
 
+# Allow rails to not blow up if no services are bound to this app
+ENV["DATABASE_URL"] ||= "sqlite3://db/production.sqlite"
+
 # Set up gems listed in the Gemfile.
 gemfile = File.expand_path('../../Gemfile', __FILE__)
 begin

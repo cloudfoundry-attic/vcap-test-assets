@@ -1,0 +1,12 @@
+source "https://rubygems.org"
+
+gem "sinatra"
+
+# Tested: ruby version
+# > Do not specify ruby version since it should be 1.9.x by default
+
+# Tested: git based gem
+gem "cf", :github => "cloudfoundry/cf", :ref => "9e802c"
+
+# Tested: gem native ext
+gem "ffi"

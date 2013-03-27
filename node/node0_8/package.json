@@ -1,0 +1,15 @@
+{
+  "name": "node0_8",
+  "version": "0.0.1",
+
+  "dependencies" : {
+    "express": "3.1.x",
+    "bcrypt": "0.7.x",
+    "semver": "git://github.com/isaacs/node-semver.git#ef7cb88c00"
+  },
+
+  "engines": {
+    "node": "0.8.x",
+    "npm": ">= 1.1.2"
+  }
+}

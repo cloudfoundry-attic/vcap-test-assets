@@ -1,15 +1,15 @@
 {
-  "name": "node-dependencies",
-  "version": "0.1.0",
+  "name": "node0_6",
+  "version": "0.0.1",
   "dependencies": {
     "express": {
-      "version": "2.5.9",
+      "version": "2.5.11",
       "dependencies": {
         "connect": {
-          "version": "1.8.7",
+          "version": "1.9.2",
           "dependencies": {
             "formidable": {
-              "version": "1.0.9"
+              "version": "1.0.13"
             }
           }
         },
@@ -25,7 +25,16 @@
       }
     },
     "bcrypt": {
-      "version": "0.5.0"
+      "version": "0.7.5",
+      "dependencies": {
+        "bindings": {
+          "version": "1.0.0"
+        }
+      }
+    },
+    "semver": {
+      "version": "1.0.6",
+      "from": "git://github.com/isaacs/node-semver.git#14a426809"
     }
   }
 }

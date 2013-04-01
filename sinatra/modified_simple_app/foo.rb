@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 
-get '/' do
+get "/" do
   host = ENV['VCAP_DEA_HOST']
   port = ENV['VCAP_DEA_PORT']
   "<h1>Hello from modified VCAP! via: #{host}:#{port}</h1>"

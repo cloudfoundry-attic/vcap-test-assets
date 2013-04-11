@@ -54,6 +54,16 @@ not_found do
   'This is nowhere to be found.'
 end
 
+error do
+  error = env['sinatra.error']
+<<TEXT
+#{error.inspect}
+
+Backtrace:
+  #{error.backtrace.join("\n  ")}
+TEXT
+end
+
 post '/service/mysql/:key' do
   client = load_mysql
   value = request.env["rack.input"].read

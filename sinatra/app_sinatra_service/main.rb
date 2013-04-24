@@ -307,7 +307,7 @@ def load_service(service_name)
   service = nil
   services.each do |k, v|
     v.each do |s|
-      if k.split('-')[0].downcase == service_name.downcase
+      if k.split('-')[0].downcase.include? service_name.downcase
         service = s["credentials"]
       end
     end

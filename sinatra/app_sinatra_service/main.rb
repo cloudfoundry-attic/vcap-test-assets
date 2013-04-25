@@ -72,7 +72,11 @@ post '/service/mysql/query' do
     result = client.query(query)
   end
   client.close
-  result.collect(&:to_hash).to_json
+  if result.respond_to? :collect
+    result.collect(&:to_hash).to_json
+  else
+    nil
+  end
 end
 
 post '/service/mysql/:key' do

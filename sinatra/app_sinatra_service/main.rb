@@ -64,6 +64,21 @@ Backtrace:
 TEXT
 end
 
+post '/service/mysql/query' do
+  queries  = request.env["rack.input"].read
+  client = load_mysql
+  result = nil
+  queries.split(';').each do |query|
+    result = client.query(query)
+  end
+  client.close
+  if result.respond_to? :collect
+    result.collect(&:to_hash).to_json
+  else
+    nil
+  end
+end
+
 post '/service/mysql/:key' do
   client = load_mysql
   value = request.env["rack.input"].read

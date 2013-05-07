@@ -257,7 +257,7 @@ def load_mysql
 end
 
 def load_mongo
-  mongodb_service = load_service('mongodb')
+  mongodb_service = load_service('mongo')
   conn = Mongo::Connection.new(mongodb_service['hostname'], mongodb_service['port'])
   db = conn[mongodb_service['db']]
   coll = db['data_values'] if db.authenticate(mongodb_service['username'], mongodb_service['password'])

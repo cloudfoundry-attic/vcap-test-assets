@@ -1,4 +1,4 @@
-# Custom startup command
+### Custom startup command
 <pre class="terminal">
-$ bundle exec ruby main.rb -p $PORT 
+Custom startup command> bundle exec ruby main.rb -p $PORT 
 </pre>

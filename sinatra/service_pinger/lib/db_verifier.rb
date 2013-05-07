@@ -27,10 +27,20 @@ class DbVerifier
   end
 
   def metrics
-    t1 = Time.now
-    Sequel.connect(self.class.db_connect_string, :test => true) do |db|
+    rv = {}
+    begin
+      t1 = Time.now
+      db = Sequel.connect(self.class.db_connect_string, :test => true)
       connect_latency = (Time.now - t1)
-      # write
+      rv[:connect] = {
+        :latency => connect_latency,
+        :error => nil,
+      }
+    rescue Sequel::Error => e
+      return {:connect => {:latency => -1, :error => "#{e.class}: #{e.message}"}}
+    end
+
+    begin
       db.create_table?(:our_table) do
         String "value"
       end
@@ -42,29 +52,38 @@ class DbVerifier
       db[:our_table].insert(:value => old_value)
       db[:our_table].update(:value => new_value)
       write_latency = Time.now - t2
+      rv[:write] = {
+        :latency => write_latency,
+        :error => nil,
+      }
+    rescue Sequel::Error => e
+      return rv.merge(
+        :write => {
+          :error => "#{e.class}: #{e.message}",
+          :latency => -1,
+        }
+      )
+    end
 
-      # read
+    begin
       t3 = Time.now
       read_value = db[:our_table].first[:value]
       raise "" unless new_value == read_value
       read_latency = Time.now - t3
 
-      return {
-        :connect => {
-          :error => nil,
-          :latency => connect_latency * 1000.0,
-        },
-        :write => {
-          :error => nil,
-          :latency => write_latency * 1000.0,
-        },
+      return rv.merge(
         :read => {
           :error => nil,
           :latency => read_latency,
         }
-      }
+      )
+    rescue Sequel::Error => e
+      return rv.merge(
+        :read => {
+          :error => "#{e.class}: #{e.message}",
+          :latency => -1,
+        }
+      )
     end
-  rescue Sequel::Error => e
-    {:connect => {:latency => -1, :error => "#{e.class}: #{e.message}"}}
   end
 end

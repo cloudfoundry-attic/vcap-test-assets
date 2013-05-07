@@ -62,5 +62,43 @@ JSON
         result[:error].should =~ /Access denied/
       end
     end
+
+    context "when the database cannot be written to" do
+      before do
+        root_connection.run "REVOKE INSERT ON *.* FROM 'testuser'@'localhost';"
+      end
+
+      it "returns write failure info" do
+        ENV["VCAP_SERVICES"] =<<JSON
+{"_":[{"name":"_name","label":"rds_mysql-n/a","plan":"10mb","credentials":{"name":"#{db_name}","hostname":"localhost","host":"localhost","port":3306,"user":"testuser","username":"testuser","password":""}}]}
+JSON
+        v = described_class.new
+        v.metrics.keys.should =~ [:connect, :write]
+        v.metrics[:connect][:error].should be_nil
+        result = v.metrics[:write]
+        result.keys.should =~ [:latency, :error]
+        result[:latency].should == -1
+        result[:error].should =~ /INSERT command denied to user/
+      end
+    end
+
+    context "when the database cannot be read" do
+      before do
+        root_connection.run "REVOKE SELECT ON *.* FROM 'testuser'@'localhost';"
+      end
+
+      it "returns read failure info" do
+        ENV["VCAP_SERVICES"] =<<JSON
+{"_":[{"name":"_name","label":"rds_mysql-n/a","plan":"10mb","credentials":{"name":"#{db_name}","hostname":"localhost","host":"localhost","port":3306,"user":"testuser","username":"testuser","password":""}}]}
+JSON
+        metrics = described_class.new.metrics
+        metrics.keys.should =~ [:connect, :write, :read]
+        metrics[:connect][:error].should be_nil
+        result = metrics[:read]
+        result.keys.should =~ [:latency, :error]
+        result[:latency].should == -1
+        result[:error].should =~ /SELECT command denied to user/
+      end
+    end
   end
 end

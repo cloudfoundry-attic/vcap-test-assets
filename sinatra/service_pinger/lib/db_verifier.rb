@@ -26,11 +26,12 @@ class DbVerifier
       "/#{credentials.fetch("name")}"
   end
 
-  def write_metrics(db, old_value, new_value)
+  def write_metrics(db, new_value)
     db.create_table?(:our_table) do
       String "value"
     end
 
+    old_value = "PreviousValue#{rand}#{Time.now}"
     begin_time = Time.now
     db[:our_table].delete
     db[:our_table].insert(:value => old_value)
@@ -73,9 +74,8 @@ class DbVerifier
     end
 
     begin
-      old_value = "PreviousValue#{rand}#{Time.now}"
       new_value = "AfterValue#{rand}#{Time.now}"
-      rv[:write] = write_metrics(db, old_value, new_value)
+      rv[:write] = write_metrics(db, new_value)
     rescue Sequel::Error => e
       return rv.merge(
         :write => {

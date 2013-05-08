@@ -1,0 +1,16 @@
+---
+applications:
+- name: ping
+  memory: 256M
+  instances: 1
+  url: ping.${target-base}
+  host: ping
+  domain: ${target-base}
+  command: ~
+  path: .
+  services:
+    rds_mysql-97fc5:
+      label: rds_mysql
+      provider: aws
+      version: n/a
+      plan: 10mb

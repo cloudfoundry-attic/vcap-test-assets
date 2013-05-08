@@ -26,7 +26,7 @@ class DbVerifier
       "/#{credentials.fetch("name")}"
   end
 
-  def write_metrics(db, new_value)
+  def write_latency(db, new_value)
     db.create_table?(:our_table) do
       String "value"
     end
@@ -36,45 +36,40 @@ class DbVerifier
     db[:our_table].delete
     db[:our_table].insert(:value => old_value)
     db[:our_table].update(:value => new_value)
-    write_latency = Time.now - begin_time
-    {
-      :latency => write_latency * 1000.0,
-      :error => nil,
-    }
+    Time.now - begin_time
   end
 
-  def read_metrics(db, new_value)
+  def read_latency(db, new_value)
     begin_time = Time.now
     read_value = db[:our_table].first[:value]
     raise "Read the wrong thing out!" unless new_value == read_value
-    read_latency = Time.now - begin_time
-    {
-      :error => nil,
-      :latency => read_latency * 1000.0
-    }
+    Time.now - begin_time
   end
   
-  def connect_metrics(db)
+  def connect_latency(db)
     begin_time = Time.now
     db.test_connection
-    {
-      :latency => (Time.now - begin_time) * 1000.0,
-      :error => nil,
-    }
+    Time.now - begin_time
   end
 
   def metrics
     rv = {}
     begin
       db = Sequel.connect(self.class.db_connect_string, test:false)
-      rv[:connect] = connect_metrics(db)
+      rv[:connect] = {
+        :latency => connect_latency(db) * 1000.0,
+        :error => nil,
+      }
     rescue Sequel::Error => e
       return {:connect => {:latency => -1, :error => "#{e.class}: #{e.message}"}}
     end
 
     begin
       new_value = "AfterValue#{rand}#{Time.now}"
-      rv[:write] = write_metrics(db, new_value)
+      rv[:write] = {
+        :latency => write_latency(db, new_value) * 1000.0,
+        :error => nil,
+      }
     rescue Sequel::Error => e
       return rv.merge(
         :write => {
@@ -86,7 +81,10 @@ class DbVerifier
 
     begin
       return rv.merge(
-        :read => read_metrics(db, new_value),
+        :read => {
+          :latency => read_latency(db, new_value) * 1000.0,
+          :error => nil,
+        }
       )
     rescue Sequel::Error => e
       return rv.merge(

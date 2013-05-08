@@ -56,12 +56,11 @@ class DbVerifier
   
   def connect_metrics(db)
     begin_time = Time.now
-    if db.test_connection
-      {
-        :latency => (Time.now - begin_time) * 1000.0,
-        :error => nil,
-      }
-    end
+    db.test_connection
+    {
+      :latency => (Time.now - begin_time) * 1000.0,
+      :error => nil,
+    }
   end
 
   def metrics

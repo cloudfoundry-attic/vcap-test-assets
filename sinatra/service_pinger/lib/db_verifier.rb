@@ -45,7 +45,7 @@ class DbVerifier
     raise "Read the wrong thing out!" unless new_value == read_value
     Time.now - begin_time
   end
-  
+
   def connect_latency(db)
     begin_time = Time.now
     db.test_connection

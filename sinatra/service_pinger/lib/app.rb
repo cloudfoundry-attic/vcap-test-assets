@@ -1,5 +1,8 @@
 require 'sinatra'
+require 'sequel'
+require 'json'
+require_relative 'db_verifier'
 
-get '/env' do
-  ENV["VCAP_SERVICES"] || "nil"
+get '/metrics' do
+  DbVerifier.new.metrics.to_json
 end

@@ -26,6 +26,33 @@ class DbVerifier
       "/#{credentials.fetch("name")}"
   end
 
+  def write_metrics(db, old_value, new_value)
+    db.create_table?(:our_table) do
+      String "value"
+    end
+
+    begin_time = Time.now
+    db[:our_table].delete
+    db[:our_table].insert(:value => old_value)
+    db[:our_table].update(:value => new_value)
+    write_latency = Time.now - begin_time
+    {
+      :latency => write_latency * 1000.0,
+      :error => nil,
+    }
+  end
+
+  def read_metrics(db, new_value)
+    begin_time = Time.now
+    read_value = db[:our_table].first[:value]
+    raise "Read the wrong thing out!" unless new_value == read_value
+    read_latency = Time.now - begin_time
+    {
+      :error => nil,
+      :latency => read_latency * 1000.0
+    }
+  end
+
   def metrics
     rv = {}
     begin
@@ -41,21 +68,9 @@ class DbVerifier
     end
 
     begin
-      db.create_table?(:our_table) do
-        String "value"
-      end
-
-      t2 = Time.now
       old_value = "PreviousValue#{rand}#{Time.now}"
       new_value = "AfterValue#{rand}#{Time.now}"
-      db[:our_table].delete
-      db[:our_table].insert(:value => old_value)
-      db[:our_table].update(:value => new_value)
-      write_latency = Time.now - t2
-      rv[:write] = {
-        :latency => write_latency,
-        :error => nil,
-      }
+      rv[:write] = write_metrics(db, old_value, new_value)
     rescue Sequel::Error => e
       return rv.merge(
         :write => {
@@ -66,16 +81,8 @@ class DbVerifier
     end
 
     begin
-      t3 = Time.now
-      read_value = db[:our_table].first[:value]
-      raise "" unless new_value == read_value
-      read_latency = Time.now - t3
-
       return rv.merge(
-        :read => {
-          :error => nil,
-          :latency => read_latency,
-        }
+        :read => read_metrics(db, new_value),
       )
     rescue Sequel::Error => e
       return rv.merge(
@@ -84,6 +91,10 @@ class DbVerifier
           :latency => -1,
         }
       )
+    end
+  ensure
+    if db
+      db.disconnect
     end
   end
 end

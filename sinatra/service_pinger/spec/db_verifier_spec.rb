@@ -26,6 +26,16 @@ JSON
   end
 
   describe "#metrics" do
+    shared_examples "closing database connections" do
+      it "closes the database connection" do
+        expect {
+          described_class.new.metrics
+        }.not_to change {
+          Sequel::DATABASES.size
+        }
+      end
+    end
+
     context "when the connect, read, and write all work" do
       before do
         ENV["VCAP_SERVICES"] =<<JSON
@@ -44,6 +54,7 @@ JSON
           result[:latency].should be_a Numeric
         end
       end
+      include_examples "closing database connections"
     end
 
     context "when the database cannot be connected to" do
@@ -61,6 +72,7 @@ JSON
         result[:latency].should == -1
         result[:error].should =~ /Access denied/
       end
+      include_examples "closing database connections"
     end
 
     context "when the database cannot be written to" do
@@ -80,6 +92,7 @@ JSON
         result[:latency].should == -1
         result[:error].should =~ /INSERT command denied to user/
       end
+      include_examples "closing database connections"
     end
 
     context "when the database cannot be read" do
@@ -99,6 +112,7 @@ JSON
         result[:latency].should == -1
         result[:error].should =~ /SELECT command denied to user/
       end
+      include_examples "closing database connections"
     end
   end
 end

@@ -52,17 +52,22 @@ class DbVerifier
       :latency => read_latency * 1000.0
     }
   end
+  
+  def connect_metrics(db)
+    begin_time = Time.now
+    if db.test_connection
+      {
+        :latency => (Time.now - begin_time) * 1000.0,
+        :error => nil,
+      }
+    end
+  end
 
   def metrics
     rv = {}
     begin
-      t1 = Time.now
-      db = Sequel.connect(self.class.db_connect_string, :test => true)
-      connect_latency = (Time.now - t1)
-      rv[:connect] = {
-        :latency => connect_latency,
-        :error => nil,
-      }
+      db = Sequel.connect(self.class.db_connect_string, test:false)
+      rv[:connect] = connect_metrics(db)
     rescue Sequel::Error => e
       return {:connect => {:latency => -1, :error => "#{e.class}: #{e.message}"}}
     end
@@ -95,6 +100,7 @@ class DbVerifier
   ensure
     if db
       db.disconnect
+      Sequel.synchronize{::Sequel::DATABASES.delete(db)}
     end
   end
 end

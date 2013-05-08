@@ -2,7 +2,7 @@ require "json"
 require 'sequel'
 
 class DbVerifier
-  class ExpectedOneDatabaseError < StandardError;
+  class ExpectedOneDatabaseError < StandardError
   end
 
   def self.db_connect_string

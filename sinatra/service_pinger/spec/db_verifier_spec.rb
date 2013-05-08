@@ -9,6 +9,12 @@ describe DbVerifier do
     root_connection.run "GRANT ALL ON *.* TO 'testuser'@'localhost'"
   end
 
+  around(:each) do |example|
+    original_env = ENV.to_hash
+    example.run
+    ENV.replace(original_env)
+  end
+
   describe "#db_connect_string" do
     it 'should find the first service' do
       ENV["VCAP_SERVICES"] =<<JSON
@@ -77,13 +83,13 @@ JSON
 
     context "when the database cannot be written to" do
       before do
+        ENV["VCAP_SERVICES"] =<<JSON
+{"_":[{"name":"_name","label":"rds_mysql-n/a","plan":"10mb","credentials":{"name":"#{db_name}","hostname":"localhost","host":"localhost","port":3306,"user":"testuser","username":"testuser","password":""}}]}
+JSON
         root_connection.run "REVOKE INSERT ON *.* FROM 'testuser'@'localhost';"
       end
 
       it "returns write failure info" do
-        ENV["VCAP_SERVICES"] =<<JSON
-{"_":[{"name":"_name","label":"rds_mysql-n/a","plan":"10mb","credentials":{"name":"#{db_name}","hostname":"localhost","host":"localhost","port":3306,"user":"testuser","username":"testuser","password":""}}]}
-JSON
         v = described_class.new
         v.metrics.keys.should =~ [:connect, :write]
         v.metrics[:connect][:error].should be_nil
@@ -97,13 +103,13 @@ JSON
 
     context "when the database cannot be read" do
       before do
+        ENV["VCAP_SERVICES"] =<<JSON
+{"_":[{"name":"_name","label":"rds_mysql-n/a","plan":"10mb","credentials":{"name":"#{db_name}","hostname":"localhost","host":"localhost","port":3306,"user":"testuser","username":"testuser","password":""}}]}
+JSON
         root_connection.run "REVOKE SELECT ON *.* FROM 'testuser'@'localhost';"
       end
 
       it "returns read failure info" do
-        ENV["VCAP_SERVICES"] =<<JSON
-{"_":[{"name":"_name","label":"rds_mysql-n/a","plan":"10mb","credentials":{"name":"#{db_name}","hostname":"localhost","host":"localhost","port":3306,"user":"testuser","username":"testuser","password":""}}]}
-JSON
         metrics = described_class.new.metrics
         metrics.keys.should =~ [:connect, :write, :read]
         metrics[:connect][:error].should be_nil

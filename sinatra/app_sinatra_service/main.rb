@@ -85,58 +85,83 @@ post '/service/mysql/query' do
 end
 
 post '/service/mysql/:key' do
-  client = load_mysql
   value = request.env["rack.input"].read
   key = params[:key]
-  result = client.query("select * from data_values where id='#{key}'")
-  if result.count > 0
-    client.query("update data_values set data_value='#{value}' where id='#{key}'")
-  else
-    client.query("insert into data_values (id, data_value) values('#{key}','#{value}');")
+
+  begin
+    client = load_mysql
+    result = client.query("select * from data_values where id='#{key}'")
+    if result.count > 0
+      client.query("update data_values set data_value='#{value}' where id='#{key}'")
+    else
+      client.query("insert into data_values (id, data_value) values('#{key}','#{value}');")
+    end
+  ensure
+    client.close
   end
-  client.close
+
   value
 end
 
 get '/service/mysql/:key' do
-  client = load_mysql
-  result = client.query("select data_value from  data_values where id = '#{params[:key]}'")
-  value = result.first['data_value']
-  client.close
+  value = nil
+
+  begin
+    client = load_mysql
+
+    result = client.query("select data_value from  data_values where id = '#{params[:key]}'")
+    value = result.first['data_value']
+  ensure
+    client.close
+  end
+
   value
 end
 
 put '/service/mysql/table/:table' do
-  client = load_mysql
-  client.query("create table #{params[:table]} (x int);")
-  client.close
+  begin
+    client = load_mysql
+    client.query("create table #{params[:table]} (x int);")
+  ensure
+    client.close
+  end
   params[:table]
 end
 
 delete '/service/mysql/:object/:name' do
-  client = load_mysql
-  client.query("drop #{params[:object]} #{params[:name]};")
-  client.close
+  begin
+    client = load_mysql
+    client.query("drop #{params[:object]} #{params[:name]};")
+  ensure
+    client.close
+  end
   params[:name]
 end
 
 put '/service/mysql/function/:function' do
-  client = load_mysql
-  client.query("create function #{params[:function]}() returns int return 1234;");
-  client.close
+  begin
+    client = load_mysql
+    client.query("create function #{params[:function]}() returns int return 1234;");
+  ensure
+    client.close
+  end
   params[:function]
 end
 
 put '/service/mysql/procedure/:procedure' do
-  client = load_mysql
-  client.query("create procedure #{params[:procedure]}() begin end;");
-  client.close
+  begin
+    client = load_mysql
+    client.query("create procedure #{params[:procedure]}() begin end;");
+  ensure
+    client.close
+  end
   params[:procedure]
 end
 
 post '/service/postgresql/:key' do
-  client = load_postgresql
   value = request.env["rack.input"].read
+  client = load_postgresql
+
   result = client.query("select * from data_values where id = '#{params[:key]}'")
   if result.count > 0
     client.query("update data_values set data_value='#{value}' where id = '#{params[:key]}'")

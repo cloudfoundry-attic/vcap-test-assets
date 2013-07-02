@@ -1,3 +1,0 @@
-Todolist app from Play 2.0 Java Tutorial
-
-Demonstrates Cloud Foundry database auto-reconfiguration using a MySQL DB.  To use PostgreSQL, you need to swap out AUTO_INCREMENT for sequences in evolution scripts.

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
-    <jsp:output omit-xml-declaration="yes"/>
-    <page:show id="ps_com_vmware_appcloud_testapps_roo_guestbook_domain_Guest" object="${guest}" path="/guests" z="cjkrtFI6iBS8CrZzjk6p61R6RbI=">
-        <field:display field="name" id="s_com_vmware_appcloud_testapps_roo_guestbook_domain_Guest_name" object="${guest}" z="XkPdlSSFhg/VFkK/MtSgvkLexP8="/>
-    </page:show>
-</div>

@@ -1,4 +1,0 @@
-To build the Roo guestbook application:
-1. cd into the root directory of the app (the directory where this README is).
-2. Invoke the mvn command "mvn clean package".
-3. The resulting war should be in the target directory.

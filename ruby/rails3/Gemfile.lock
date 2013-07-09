@@ -84,6 +84,6 @@ PLATFORMS
 DEPENDENCIES
   ffi
   mysql2
-  rails (~> 3.0.5)
+  rails (~> 3.0.20)
   sqlite3
   thin

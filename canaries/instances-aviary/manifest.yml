@@ -1,0 +1,9 @@
+---
+applications:
+- name: instances-aviary
+  host: ${name}
+  instances: 2
+  env:
+    TARGET: https://api.run.pivotal.io
+    USERNAME: cfaccounts+canary@pivotallabs.com
+    PASSWORD: clone7adhere

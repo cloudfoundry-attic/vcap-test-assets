@@ -1,0 +1,7 @@
+---
+applications:
+- name: zero-downtime-aviary
+  memory: 256M
+  instances: 2
+  path: .
+  buildpack: git://github.com/vito/heroku-buildpack-go.git

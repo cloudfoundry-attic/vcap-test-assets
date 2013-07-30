@@ -21,7 +21,6 @@ def rando
 end
 
 while mb_used < SPACE
-  puts mb_used
   f = File.new("#{DIR}/SPACE#{rando}.txt", "w+")
   (3*1024*1024).times do
     f.write(rand.to_s)

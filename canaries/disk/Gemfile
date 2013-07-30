@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+gem "sinatra"
+gem "cfoundry"
+gem "rspec"
+gem "rack-test"
+gem "sys-filesystem"

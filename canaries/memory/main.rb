@@ -1,12 +1,10 @@
 require "sinatra"
+require_relative "lib/memory_kudzu"
 
-MEMORY = ENV["MEMORY"] ? ENV["MEMORY"].to_i : 1000
+MEMORY = ENV["MEMORY"] ? ENV["MEMORY"].to_i : 120
 set :port, ENV["PORT"] ? ENV["PORT.to_i"] : 3000
 
-foo = []
-(6541*MEMORY).times do
-  foo << rand.to_s.to_sym
-end
+MemoryKudzu.grow_until(MEMORY)
 
 get "/" do
   return "Sing"

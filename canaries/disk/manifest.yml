@@ -1,9 +1,7 @@
 ---
 applications:
-- name: memory
+- name: disk
   host: ${name}
   instances: 2
   env:
-    #--------- FOR A1 ---------------
-    PORT: 3000
-    #--------- FOR PROD -------------
+    SPACE: 768

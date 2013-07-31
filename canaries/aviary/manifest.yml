@@ -4,15 +4,8 @@ applications:
   host: ${name}
   instances: 2
   env:
-    #--------- FOR A1 ---------------
-    NUM_INSTANCES: 20
-    DOMAIN: a1-app.cf-app.com
-    USERNAME: cfaccounts+a1+canary@pivotallabs.com
-    PASSWORD: clone7adhere
-    TARGET: http://api.a1.cf-app.com
-    #--------- FOR PROD ---------------exi
-    #TARGET: https://api.run.pivotal.io
-    #PASSWORD: clone7adhere
-    #DOMAIN: cf-apps.io
-    #USERNAME: cfaccounts+canary@pivotallabs.com
-    #ZERO_DOWNTIME_NUM_INSTANCES: 44
+    TARGET:
+    PASSWORD:
+    DOMAIN:
+    USERNAME:
+    NUM_INSTANCES: 54

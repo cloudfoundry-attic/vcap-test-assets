@@ -2,10 +2,7 @@
 applications:
 - name: instances-canary
   memory: 128M
-  instances: 20
+  instances: 30
   host: instances-canary
-  # ----------- FOR PROD -------------
-  # domain: cfapps.io
-  # ----------- FOR A1 -------------
-  domain: a1-app.cf-app.com
+  domain: cfapps.io
   path: .

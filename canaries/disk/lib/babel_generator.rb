@@ -10,7 +10,7 @@ class BabelGenerator
   end
 
   def cleanup
-    `rm #{@dir}/SPACE*.txt`
+    `rm -f #{@dir}/SPACE*.txt`
   end
 
   def populate_until(size_in_mb)

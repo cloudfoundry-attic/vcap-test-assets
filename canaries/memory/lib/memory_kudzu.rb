@@ -8,7 +8,7 @@ class MemoryKudzu
       @vine ||= []
       while (memory_size < size_in_mb)
         #puts "memory_size: #{memory_size} size_in_mb: #{size_in_mb}"
-        @vine << (rand.to_s * 10**5).to_sym
+        @vine << (rand.to_s * 10**5).to_s
       end
     end
 

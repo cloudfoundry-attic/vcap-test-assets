@@ -30,4 +30,10 @@ app.get("/native_ext", function(req,res) {
   }
 });
 
+app.get("/logs", function(req, res){
+    console.log("stdout log");
+    console.error("stderr log");
+    res.send("");
+});
+
 app.listen(process.env.VCAP_APP_PORT || 3000);

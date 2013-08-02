@@ -8,6 +8,5 @@ get '/' do
 end
 
 get '/crash/:id' do
-  ps = "kill -9 #{params[:id]}"
-  Kernel.`ps
+  Process.kill(9, params[:id].to_i)
 end

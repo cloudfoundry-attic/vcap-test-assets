@@ -24,8 +24,9 @@ public class MainServlet extends HttpServlet {
 		response.setStatus(200);
 		PrintWriter writer = response.getWriter();
 		writer.println("It just needed to be restarted!");
-		writer.println("My instance id: " + System.getenv("VCAP_APP_ID"));
-		writer.println("My location: " + System.getenv("VCAP_DEA_HOST") + ":" + System.getenv("VCAP_DEA_PORT"));
+		writer.println("My application metadata: " + System.getenv("VCAP_APPLICATION"));
+		writer.println("My port: " + System.getenv("PORT"));
+		writer.println("My custom env variable: " + System.getenv("CUSTOM_VAR"));
 		writer.close();
 	}
 }

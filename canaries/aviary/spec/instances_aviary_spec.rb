@@ -8,12 +8,22 @@ describe InstancesAviary do
 
   before{ CFoundry::Client.stub(get: client ) }
 
-  describe '.running_ratio' do
+  describe '.cfoundry_running_ratio' do
     it 'returns the correct ratio' do
       client.stub(app_by_name: app)
       app.stub(:total_instances).and_return(100)
       app.stub(:running_instances).and_return(80)
-      aviary.running_ratio.should == 0.8
+      aviary.cfoundry_running_ratio.should == 0.8
+    end
+  end
+
+  describe '.pinged_running_ratio' do
+    it 'returns ratio of instances seen by pingging versus total number of instances' do
+      client.stub(app_by_name: app)
+      app.stub(url: 'fake_url')
+      app.stub(:total_instances).and_return(4)
+      Net::HTTP.should_receive(:get).exactly(16).times.and_return("1")
+      aviary.pinged_running_ratio.should == 0.25
     end
   end
 
@@ -29,7 +39,8 @@ describe InstancesAviary do
   describe '.ok?' do
     context 'running more than 80% of the instances' do
       before do
-        aviary.stub(:running_ratio).and_return(0.80)
+        aviary.stub(:cfoundry_running_ratio).and_return(0.80)
+        aviary.stub(:pinged_running_ratio).and_return(0.80)
       end
 
       it 'should be true' do
@@ -39,7 +50,7 @@ describe InstancesAviary do
 
     context 'running less than 80% of the instances' do
       before do
-        aviary.stub(:running_ratio).and_return(0.10)
+        aviary.stub(:cfoundry_running_ratio).and_return(0.10)
       end
       it 'should be false' do
         aviary.should_not be_ok

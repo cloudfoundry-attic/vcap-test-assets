@@ -16,7 +16,7 @@ class InstancesAviary
   end
 
   def error_message
-    "Instances canary croaked (running ratio: #{running_ratio}%)"
+    "Instances canary croaked (cfoundry running ratio: #{cfoundry_running_ratio}%, pinged running ratio: #{pinged_running_ratio}%)"
   end
 
   def app
@@ -25,11 +25,28 @@ class InstancesAviary
   end
 
   def ok?
-    running_ratio >= 0.8
+    cfoundry_running_ratio >= 0.8 && pinged_running_ratio >= 0.8
   end
 
-  def running_ratio
+  def cfoundry_running_ratio
     return app.running_instances.to_f  / app.total_instances
   end
 
+  def pinged_running_ratio
+    threads = []
+    indexes = {}
+    mutex = Mutex.new
+    url = app.url
+    num_instances = app.total_instances
+    (num_instances * 4).times do
+      threads << Thread.new(indexes) do |indexes|
+        index = Net::HTTP.get(url, '/instance-index')
+        mutex.synchronize { indexes[index] = true }
+      end
+    end
+
+    threads.each(&:join)
+
+    indexes.size.to_f / num_instances
+  end
 end

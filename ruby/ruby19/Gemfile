@@ -6,7 +6,7 @@ gem "sinatra"
 # > Do not specify ruby version since it should be 1.9.x by default
 
 # Tested: git based gem
-gem "cf", :github => "cloudfoundry/cf", :ref => "9e802c"
+gem "cf", :git => "http://github.com/cloudfoundry/cf.git", :ref => "9e802c"
 
 # Tested: gem native ext
 gem "ffi"

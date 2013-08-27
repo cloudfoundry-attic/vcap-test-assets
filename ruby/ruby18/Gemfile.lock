@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/cloudfoundry/cf.git
+  remote: http://github.com/cloudfoundry/cf.git
   revision: 9e802c091d87ff08121d8da1cb309ff0e9681ef1
   ref: 9e802c
   specs:

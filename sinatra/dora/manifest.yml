@@ -1,0 +1,8 @@
+---
+applications:
+- name: exploreapp
+  memory: 256M
+  instances: 1
+  host: exploreapp
+  domain: cfapps.io
+  path: .

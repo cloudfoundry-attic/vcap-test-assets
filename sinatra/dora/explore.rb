@@ -1,10 +1,19 @@
 require 'rubygems'
 require 'sinatra'
 
+# Unique identifier for the app's lifecycle.
+#
+# Useful for checking that an app doesn't die and come back up.
+ID = SecureRandom.uuid
+
 get '/' do
   host = ENV['VCAP_APP_HOST']
   port = ENV['VCAP_APP_PORT']
   "<h1>Hello from VCAP! via: #{host}:#{port}</h1>"
+end
+
+get '/id' do
+  ID
 end
 
 get '/find/:filename' do

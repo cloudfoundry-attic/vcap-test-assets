@@ -42,3 +42,7 @@ get '/logspew/:bytes' do
   "Just wrote #{params[:bytes]} random bytes to the log"
 end
 
+get '/env/:name' do
+  ENV[params[:name]]
+end
+

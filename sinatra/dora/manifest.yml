@@ -1,8 +1,7 @@
 ---
 applications:
-- name: exploreapp
+- name: dora
   memory: 256M
   instances: 1
-  host: exploreapp
-  domain: cfapps.io
+  host: dora
   path: .

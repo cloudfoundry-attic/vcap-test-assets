@@ -38,7 +38,7 @@ get '/sigterm/:signal' do
 end
 
 get '/logspew/:bytes' do
-  system "dd if=/dev/urandom of=/dev/stdout bs=1 count=#{params[:bytes].to_i} 2> /dev/null"
+  system "cat /dev/urandom | head -c #{params[:bytes].to_i}"
   "Just wrote #{params[:bytes]} random bytes to the log"
 end
 

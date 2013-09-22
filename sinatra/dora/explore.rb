@@ -17,8 +17,7 @@ get '/id' do
 end
 
 get '/find/:filename' do
-  files = `find / -name #{params[:filename]}`
-  files
+  `find / -name #{params[:filename]}`
 end
 
 get '/sigterm' do
@@ -40,6 +39,22 @@ end
 get '/logspew/:bytes' do
   system "cat /dev/urandom | head -c #{params[:bytes].to_i}"
   "Just wrote #{params[:bytes]} random bytes to the log"
+end
+
+get '/echo/:destination/:output' do
+  redirect =
+    case params[:destination]
+    when "stdout"
+      ""
+    when "stderr"
+      " 1>&2"
+    else
+      " > #{params[:destination]}"
+    end
+
+  system "echo '#{params[:output]}'#{redirect}"
+
+  "Printed '#{params[:output]}' to #{params[:destination]}!"
 end
 
 get '/env/:name' do

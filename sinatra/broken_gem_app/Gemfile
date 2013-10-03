@@ -1,4 +1,0 @@
-source "http://rubygems.org"
-
-gem "broken", :path => "./broken-gem"
-gem "sinatra"

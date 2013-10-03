@@ -1,11 +1,9 @@
-[5, 10, 15, 20].each do |total|
-  sleep(5)
-  $stdout.puts "running for #{total} secs"
-  $stdout.flush
-end
+INCREMENT = 0.5.freeze
 
-while true
-  sleep(10)
-  $stdout.puts "still running..."
+i = 0
+loop do
+  i += INCREMENT
+  sleep(INCREMENT)
+  $stdout.puts "running for #{i} secs"
   $stdout.flush
 end

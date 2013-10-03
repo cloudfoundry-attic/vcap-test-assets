@@ -1,5 +1,5 @@
 #!/bin/bash
 if test -n "$(find "$1" -type f -name 'simple_please' | sed 1q)"
-then echo Simple
+then echo Another
 else echo no; exit 1
 fi

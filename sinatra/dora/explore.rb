@@ -6,6 +6,9 @@ require 'sinatra'
 # Useful for checking that an app doesn't die and come back up.
 ID = SecureRandom.uuid
 
+$stdout.sync = true
+$stderr.sync = true
+
 get '/' do
   host = ENV['VCAP_APP_HOST']
   port = ENV['VCAP_APP_PORT']

@@ -1,4 +1,5 @@
 require "cfoundry"
+require "net/http"
 
 class InstancesAviary
   def initialize(target, user, password, org, space, app_name)

@@ -40,8 +40,8 @@ get '/sigterm/:signal' do
 end
 
 get '/logspew/:bytes' do
-  system "cat /dev/urandom | head -c #{params[:bytes].to_i}"
-  "Just wrote #{params[:bytes]} random bytes to the log"
+  system "cat /dev/zero | head -c #{params[:bytes].to_i}"
+  "Just wrote #{params[:bytes]} bytes of zeros to the log"
 end
 
 get '/echo/:destination/:output' do

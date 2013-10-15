@@ -1,0 +1,46 @@
+<html>
+<head>
+  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  <style>
+    body {
+        font-family: Verdana;
+    }
+    #center {
+        width: 500px;
+        margin: 100px auto;
+        text-align: center;
+    }
+    #can_i_bump {
+        background-color: <%= can_i_bump  ? "green" : "red" %>;
+        font-size: 60px;
+        padding: 40px 0px;
+        color: white;
+        border-radius: 5px;
+        text-align: center;
+        font-weight: 800;
+    }
+    .yes #why {
+        display: none;
+    }
+    .no #why {
+        margin-top: 75px;
+        padding: 40px 0px;
+        background-color: #EAE4C3;
+        font-size: 32px;
+        border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+<div id="center" class="<%= can_i_bump ? "yes" : "no" %>">
+    <h1>Can I bump cf-release?</h1>
+    <div id="can_i_bump">
+    <%= can_i_bump ? "<i class='icon-smile'></i> YES" : "<i class='icon-frown'></i> NO" %>
+    </div>
+    <div id="why">
+      <i class="icon-comment"></i>
+      <%= reason %>
+    </div>
+</div>
+</body>
+</html>

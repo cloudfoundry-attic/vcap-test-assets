@@ -64,3 +64,18 @@ get '/env/:name' do
   ENV[params[:name]]
 end
 
+get '/curl/:host/?:port?' do
+  host = params[:host]
+  port = params[:port] || ENV['VCAP_APP_PORT']
+
+  command = "curl -I -s #{host}:#{port}"
+  result = `#{command}`
+
+  <<-HTML
+<pre>
+#{command}
+==========
+#{result}
+</pre>
+  HTML
+end

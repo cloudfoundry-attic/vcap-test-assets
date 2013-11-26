@@ -39,6 +39,10 @@ get '/sigterm/:signal' do
   Process.kill(signal, pid)
 end
 
+get '/ruby-version' do
+  `ruby -v`
+end
+
 get '/logspew/:bytes' do
   system "cat /dev/zero | head -c #{params[:bytes].to_i}"
   "Just wrote #{params[:bytes]} bytes of zeros to the log"

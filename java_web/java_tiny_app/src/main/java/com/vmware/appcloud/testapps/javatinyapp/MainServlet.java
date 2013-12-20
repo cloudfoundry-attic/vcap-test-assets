@@ -20,6 +20,7 @@ public class MainServlet extends HttpServlet {
 		if ("true".equals(request.getParameter("shutdown"))) {
 			System.exit(1);
 		}
+		System.out.println("Responding to " + request.getServletPath());
 		response.setContentType("text/plain");
 		response.setStatus(200);
 		PrintWriter writer = response.getWriter();

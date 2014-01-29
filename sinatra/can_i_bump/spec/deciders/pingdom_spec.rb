@@ -36,7 +36,7 @@ describe Decider::Pingdom do
 
       it "says NO" do
         expect(decider.can_i_bump?).to be_false
-        expect(decider.reason).to match /No data/
+        expect(decider.reason).to match /no data/
       end
     end
 
@@ -55,7 +55,7 @@ describe Decider::Pingdom do
 
       it "says NO" do
         expect(decider.can_i_bump?).to be_false
-        expect(decider.reason).to match /Pingdom failed to connect to a.target_hostname, c.target_hostname/
+        expect(decider.reason).to match /Pingdom: failed to connect to a.target_hostname, c.target_hostname/
       end
     end
 

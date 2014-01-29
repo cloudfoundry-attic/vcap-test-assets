@@ -2,9 +2,19 @@ require "spec_helper"
 require "rest-client"
 
 describe "Sinatra Application" do
-  let(:environment) { {} }
+  let(:original_environment) do
+    {
+      "PINGDOM_APP_KEY" => "app_key",
+      "PINGDOM_USERNAME" => "username",
+      "PINGDOM_PASSWORD" => "password",
+      "PINGDOM_HOSTNAME" => "hostname"
+    }
+  end
+
+  let(:environment) { original_environment }
+
   before do
-    start_can_i_bump({env: environment})
+    start_can_i_bump({ env: environment })
   end
 
   after do
@@ -15,33 +25,22 @@ describe "Sinatra Application" do
     it "returns no by default" do
       response = make_get_request
       expect(response.body).to match /NO/
-      expect(response.body).to match /No data yet/
+      expect(response.body).to match /no data yet/
     end
 
-    context "when the value the set to yes" do
+    context "when the value is set to no" do
       before do
-        make_put_request("yes?reason=idunno")
-      end
-
-      it "returns yes" do
-        response = make_get_request
-        expect(response.body).to match /YES/
-      end
-
-      it "prints out the reason" do
-        response = make_get_request
-        expect(response.body).to match /idunno/
-      end
-    end
-
-    context "when the value the set to no" do
-      before do
-        make_put_request("no")
+        make_put_request("no?reason=idunno")
       end
 
       it "returns no" do
         response = make_get_request
         expect(response.body).to match /NO/
+      end
+
+      it "prints out the reason" do
+        response = make_get_request
+        expect(response.body).to match /idunno/
       end
     end
 
@@ -54,7 +53,7 @@ describe "Sinatra Application" do
     end
 
     context "when token is set in env variable" do
-      let(:environment) { { "CAN_I_BUMP_TOKEN" => "app_token" } }
+      let(:environment) { original_environment.merge("CAN_I_BUMP_TOKEN" => "app_token") }
 
       context "when the specified token does not match app token" do
         it "return Unauthorized" do
@@ -65,6 +64,8 @@ describe "Sinatra Application" do
       end
 
       context "when the specified token matches app token" do
+       let(:environment) { original_environment.merge("CAN_I_BUMP_TOKEN" => "app_token") }
+
         it "returns 200" do
           response = make_put_request("yes?token=app_token")
           expect(response.code).to eq(200)

@@ -4,7 +4,7 @@ module Decider
 
     def initialize
       @value == "no"
-      @reason = "No data yet"
+      @reason = "Jenkins: no data yet"
     end
 
     def can_i_bump?

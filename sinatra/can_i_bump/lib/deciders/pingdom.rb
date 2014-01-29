@@ -7,13 +7,13 @@ module Decider
 
     attr_reader :reason
 
-    def initialize app_key, username, password, hostname
+    def initialize(app_key, username, password, hostname)
       @app_key = app_key
       @username = username
       @password = password
       @hostname = hostname
       @can_i_bump = false
-      @reason = "No data yet"
+      @reason = "Pingdom: no data yet"
 
       message = "Invalid argument, cannot be nil"
       [@app_key, @username, @password, @hostname].each {|param| raise ArgumentError, message if param.nil?}
@@ -28,18 +28,18 @@ module Decider
 
     def verify_pingdom
       checks = pingdom_checks
-      return set_can_i_bump(false, "No data from pingdom") if checks.empty?
+      return set_can_i_bump(false, "Pingdom: no data") if checks.empty?
       failed_checks = checks.select { |c| c["status"] != "up" && c["status"] != "paused" }
 
       unless failed_checks.empty?
         return set_can_i_bump(
           false,
-          "Pingdom failed to connect to #{failed_checks.map {|c| c["hostname"]}.join(", ")}")
+          "Pingdom: failed to connect to #{failed_checks.map {|c| c["hostname"]}.join(", ")}")
       end
 
       return set_can_i_bump(true, nil)
     rescue => e
-      return set_can_i_bump(false, "Can't connect to pingdom: #{e.message}")
+      return set_can_i_bump(false, "Pingdom: failed to get checks: #{e.message}")
     end
 
     def set_can_i_bump(value, reason)

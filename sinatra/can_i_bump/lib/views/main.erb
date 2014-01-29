@@ -37,10 +37,14 @@
     <div id="can_i_bump">
     <%= can_i_bump ? "<i class='icon-smile'></i> YES" : "<i class='icon-frown'></i> NO" %>
     </div>
+    <% reasons.each do |reason| %>
+    <% if reason %>
     <div id="why">
       <i class="icon-comment"></i>
       <%= reason %>
     </div>
+    <% end %>
+    <% end %>
 </div>
 </body>
 </html>

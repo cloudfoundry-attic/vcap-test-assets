@@ -10,10 +10,10 @@ import (
 var addr = flag.String("addr", ":8000", "http service address")
 
 func main() {
-  flag.Parse()
+	flag.Parse()
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		_, err := http.Get("http://example.com/")
+		_, err := http.Get("http://google.com/")
 
 		if err == nil {
 			fmt.Fprintf(w, "Canary sings")

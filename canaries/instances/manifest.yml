@@ -1,8 +1,0 @@
----
-applications:
-- name: instances-canary
-  memory: 128M
-  instances: 30
-  host: instances-canary
-  domain: cfapps.io
-  path: .

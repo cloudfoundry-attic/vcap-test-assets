@@ -1,7 +1,0 @@
----
-applications:
-- name: network-canary
-  memory: 256M
-  instances: 1
-  path: .
-  buildpack: git://github.com/vito/heroku-buildpack-go.git

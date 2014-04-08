@@ -5,6 +5,5 @@ applications:
     instances: 1
     runtime: ruby19
     host: memory-hog-${random-word}
-    domain: ${target-base}
     mem: 128M
     command: ruby memhog.rb -p $PORT
